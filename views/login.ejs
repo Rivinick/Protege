@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Protege+</title>
+    <link rel="stylesheet" href="/css/login.css">
+  </head>
+  <body>
+    <div class="login-container">
+      <h1 class="app-title">PROTEGE +</h1>
+
+      <form class="login-form" action="/login" method="post">
+        <div class="input-group">
+          <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
+        </div>
+
+        <div class="input-group">
+          <input type="password" name="password" id="password" placeholder="Digite sua senha" required>
+        </div>
+
+        <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+
+        <button type="submit" class="btn-login">Entrar</button>
+        <button type="button" class="btn-register" onclick="window.location.href='/cadastro'">
+          Não possui login? Cadastre-se
+        </button>
+      </form>
+
+      <a href="/visitante" class="guest-access">Entrar como visitante</a>
+    </div>
+  </body>
+</html>

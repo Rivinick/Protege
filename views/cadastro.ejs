@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Protege+</title>
+    <link rel="stylesheet" href="/css/cadastro.css">
+  </head>
+  <body>
+    <div class="register-container">
+      <h1 class="app-title">PROTEGE +</h1>
+
+      <form class="register-form" action="/cadastro" method="post">
+        <div class="input-group">
+          <input type="text" name="matricula" id="matricula" placeholder="Matrícula" required>
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="nome" id="nome" placeholder="Nome completo" required>
+        </div>
+
+        <div class="input-group">
+          <input type="email" name="email" id="email" placeholder="E-mail" required>
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="area" id="area" placeholder="Área de atuação" required>
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="cargo" id="cargo" placeholder="Cargo" required>
+        </div>
+
+        <button type="submit" class="btn-register">Cadastre-se</button>
+        <button type="button" class="btn-login" onclick="window.location.href='/login'">
+          Fazer login
+        </button>
+      </form>
+
+      <a href="#" class="guest-access">Entrar como visitante</a>
+    </div>
+  </body>
+</html>

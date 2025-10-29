@@ -1,0 +1,165 @@
+/* Emergência */
+
+:root{
+  --main-red: #D90D1E;
+  --main-green: #038C8C;
+  --light: #F2F2F2;
+  --card-width: 273px;
+}
+
+/* Reset / baseline */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container fixo (protótipo mobile) */
+.emergency-container {
+  position: relative;
+  width: 320px;
+  height: 568px;
+  background: var(--light);
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+.app-title {
+  position: absolute;
+  width: 110px;
+  height: 29px;
+  left: calc(50% - 110px/2 - 78px);
+  top: 29px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 27px;
+  color: var(--main-red);
+  white-space: nowrap;
+}
+
+.logout-area {
+  position: absolute;
+  left: 226px;
+  top: 45px; 
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.logout-text {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: var(--main-green);
+}
+
+.search-wrap {
+  position: absolute;
+  width: var(--card-width);
+  left: calc(50% - var(--card-width)/2 - 0.5px);
+  top: 138px;
+}
+
+.search-wrap input[type="search"]{
+  width: 100%;
+  height: 36px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  font-size: 13px;
+  color: #222;
+}
+
+/* Lista de serviços (coluna) */
+.emergency-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  position: absolute;
+  width: var(--card-width);
+  left: calc(50% - var(--card-width)/2 - 0.5px);
+  top: 176px;
+  padding-bottom: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+/* Card (caixa vermelha) */
+.card-service {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 265px; 
+  height: 80px; 
+  background: var(--main-red);
+  box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
+  border-radius: 10px;
+  padding: 10px 15px;
+  color: var(--light);
+  cursor: pointer;
+}
+
+/* Lado esquerdo do card: ícone + título */
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Ícone branco quadrado (substitua por SVG quando disponível) */
+.card-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--light);
+  border-radius: 6px;
+}
+
+/* Título do local */
+.card-title {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--light);
+  max-width: 140px;
+  word-break: break-word;
+}
+
+/* Lado direito do card: telefone e distância */
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.card-phone {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--light);
+}
+
+.card-distance {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--light);
+  opacity: 0.9;
+}
+
+/* Hover para indicar interatividade */
+.card-service:hover {
+  transform: translateY(-4px);
+  transition: transform 150ms ease;
+}
+
+/* Pequenas adaptações para scrollbar no protótipo */
+.emergency-section::-webkit-scrollbar { width: 6px; }
+.emergency-section::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }

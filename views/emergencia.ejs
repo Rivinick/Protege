@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Serviços de Emergência - Protege+</title>
+  <link rel="stylesheet" href="/css/emergencia.css" />
+</head>
+<body>
+  <div class="emergency-container">
+    <!-- Cabeçalho (PROTEGE + e Logout) -->
+    <h1 class="app-title">PROTEGE +</h1>
+    <div class="logout-area" onclick="window.location.href='/login'">
+      <span class="logout-text">Logout</span>
+    </div>
+
+    <!-- Barra de pesquisa -->
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Pesquisar" />
+    </div>
+
+    <!-- Lista/Seção de serviços de emergência (cards) -->
+    <section class="emergency-section" id="services-list">
+      <!-- Cada card segue o visual do Figma (caixa vermelha, texto branco, linha divisória e info à direita) -->
+      <article class="card-service">
+        <div class="card-left">
+          <div class="card-icon"></div>
+          <div class="card-title">Hospital Manoel Novaes</div>
+        </div>
+
+        <div class="card-right">
+          <div class="card-phone">3694-1122</div>
+          <div class="card-distance">10km</div>
+        </div>
+      </article>
+
+      <article class="card-service">
+        <div class="card-left">
+          <div class="card-icon"></div>
+          <div class="card-title">Hospital São Lucas</div>
+        </div>
+
+        <div class="card-right">
+          <div class="card-phone">3344-5566</div>
+          <div class="card-distance">6km</div>
+        </div>
+      </article>
+
+      <article class="card-service">
+        <div class="card-left">
+          <div class="card-icon"></div>
+          <div class="card-title">UPA Central</div>
+        </div>
+
+        <div class="card-right">
+          <div class="card-phone">192</div>
+          <div class="card-distance">3km</div>
+        </div>
+      </article>
+
+      <article class="card-service">
+        <div class="card-left">
+          <div class="card-icon"></div>
+          <div class="card-title">Samu</div>
+        </div>
+
+        <div class="card-right">
+          <div class="card-phone">192</div>
+          <div class="card-distance">—</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    // Pesquisa cliente simples (filtra por título ou telefone)
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('search');
+      const list = Array.from(document.querySelectorAll('.card-service'));
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        list.forEach(card => {
+          const title = card.querySelector('.card-title').textContent.toLowerCase();
+          const phone = card.querySelector('.card-phone').textContent.toLowerCase();
+          const match = q === '' || title.includes(q) || phone.includes(q);
+          card.style.display = match ? 'flex' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
