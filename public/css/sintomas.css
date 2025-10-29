@@ -1,0 +1,92 @@
+/* Tela Inicial - Protege+ */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito Sans', sans-serif;
+  background-color: #D90D1E;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.home-container {
+  width: 320px;
+  text-align: center;
+  position: relative;
+}
+
+.app-title {
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+
+.logout-area {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+.logout-text {
+  font-size: 11px;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #FFFFFF;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.button {
+  width: 85%;
+  background-color: #038C8C;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 15px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.button:hover {
+  transform: scale(1.03);
+  background-color: #026d6d;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+#sintomas-icon {
+  background-image: url('/images/sintomas-icon.png');
+}
+
+#emergencia-icon {
+  background-image: url('/images/emergencia-icon.png');
+}
+
+#teste-icon {
+  background-image: url('/images/teste-icon.png');
+}
+
+.button-text {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+}

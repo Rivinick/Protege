@@ -46,7 +46,6 @@ app.post('/cadastro', (req, res) => {
   res.redirect('/home');
 });
 
-app.get('/sintomas', (req, res) => res.send('Tela de Sintomas - em desenvolvimento'));
 app.get('/teste', (req, res) => res.send('Tela de Teste de Conhecimento - em desenvolvimento'));
 
 // Login -> redireciona para Home
@@ -61,4 +60,8 @@ app.get('/visitante', (req, res) => {
 
 app.get('/emergencia', (req, res) => {
   res.render('emergencia', { layout: false });
+});
+
+app.get('/sintomas', (req, res) => {
+  res.render('sintomas');
 });
