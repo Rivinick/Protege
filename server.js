@@ -11,57 +11,106 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('layout', 'layout');
 app.use(expressLayouts);
 
-// Servir arquivos estáticos
+// Servir arquivos estáticos (CSS, Imagens, JS do public)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rotas
+// --- ADIÇÃO 1: Habilitar o "Leitor" de Formulários ---
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.json()); 
+
+
+// --- ROTAS PRINCIPAIS ---
+
 app.get('/', (req, res) => {
-    // Corrigido: apenas redireciona para /login
-    res.redirect('/login');
+    res.redirect('/login');
 });
 
 app.get('/dashboard', (req, res) => {
-    res.render('dashboard', { user: { name: 'Usuário Teste' } });
+    res.render('dashboard', { user: { name: 'Usuário Teste' } });
 });
 
 app.get('/login', (req, res) => {
-    res.render('login', { layout: false }); // Tela full-screen, sem layout padrão
+    res.render('login', { layout: false }); 
+});
+
+// Login -> redireciona para Home
+app.post('/login', (req, res) => {
+    console.log('Tentativa de Login:', req.body);
+    res.redirect('/home');
 });
 
 app.get('/cadastro', (req, res) => {
-    res.render('cadastro', { layout: false }); // Também tela independente
-});
-
-// Iniciar servidor
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
-});
-
-app.get('/home', (req, res) => {
-  res.render('home', { layout: false });
+    res.render('cadastro', { layout: false }); 
 });
 
 // Após cadastro, redireciona para a home
 app.post('/cadastro', (req, res) => {
-  res.redirect('/home');
+    console.log('Novos dados de Cadastro:', req.body);
+    res.redirect('/home');
+});
+
+app.get('/home', (req, res) => {
+    res.render('home', { layout: false });
 });
 
 app.get('/teste', (req, res) => res.send('Tela de Teste de Conhecimento - em desenvolvimento'));
 
-// Login -> redireciona para Home
-app.post('/login', (req, res) => {
-  res.redirect('/home');
-});
-
-// Visitante -> redireciona também
 app.get('/visitante', (req, res) => {
-  res.redirect('/home');
+    res.redirect('/home');
 });
 
 app.get('/emergencia', (req, res) => {
-  res.render('emergencia', { layout: false });
+    res.render('emergencia', { layout: false });
 });
 
 app.get('/sintomas', (req, res) => {
-  res.render('sintomas');
+    res.render('sintomas');
+});
+
+// --- ADIÇÃO 2: Rotas do Novo Formulário de Exemplo ---
+
+// Rota para EXIBIR o formulário de exemplo
+// (Corrigido por você, está perfeito!)
+app.get('/formulario', (req, res) => {
+    // Agora o formularioExemplo.ejs usará o seu layout.ejs padrão!
+    res.render('formularioExemplo', { layout: false }); 
+});
+
+// --- ATUALIZAÇÃO DO "PASSO 3" APLICADA AQUI ---
+// Rota para PROCESSAR o envio do formulário (POST)
+app.post('/salvar-formulario', (req, res) => {
+    
+    // Atualizei os console.log para mostrar o conceito Mestre/Detalhe
+    // com os campos do novo formulário de "Pedido de Suprimentos".
+
+    console.log('--- DADOS DO FORMULÁRIO (MESTRE/DETALHE) ---');
+
+    // --- MESTRE (O Pedido em si) ---
+    console.log('MESTRE: ID do Pedido:', req.body.idPedido);
+    console.log('MESTRE: Data do Pedido:', req.body.dataPedido);
+    console.log('MESTRE: Solicitante:', req.body.solicitante);
+    console.log('------------------------------------------------');
+
+    // --- DETALHE (Itens do Pedido) ---
+    console.log('DETALHE: Item 1 - Nome:', req.body.item1Nome);
+    console.log('DETALHE: Item 1 - Qtd:', req.body.item1Quantidade);
+    console.log('DETALHE: Item 1 - Obs:', req.body.item1Observacoes);
+
+    // Verifica se o Item 2 (opcional) foi preenchido
+    if (req.body.item2Nome && req.body.item2Nome !== '') {
+        console.log('------------------------------------------------');
+        console.log('DETALHE: Item 2 - Nome:', req.body.item2Nome);
+        console.log('DETALHE: Item 2 - Qtd:', req.body.item2Quantidade);
+        console.log('DETALHE: Item 2 - Obs:', req.body.item2Observacoes);
+    }
+    console.log('================================================');
+
+    // Envia uma resposta simples de volta para o navegador
+    res.send('Formulário recebido com sucesso! Verifique o console do VSCode para ver os dados Mestre/Detalhe.');
+});
+
+
+// --- INICIAR SERVIDOR ---
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
 });
