@@ -6,16 +6,13 @@
     <title>Cadastro - Protege+</title>
     <link rel="stylesheet" href="/css/cadastro.css">
     <link rel="icon" href="/logo.png" type="image/png">
+    <script src="/js/api.js"></script>
   </head>
   <body>
     <div class="register-container">
       <h1 class="app-title">PROTEGE +</h1>
 
-      <form class="register-form" action="/cadastro" method="post">
-        <div class="input-group">
-          <input type="text" name="matricula" id="matricula" placeholder="Matrícula" required>
-        </div>
-
+      <form id="registerForm" class="register-form">
         <div class="input-group">
           <input type="text" name="nome" id="nome" placeholder="Nome completo" required>
         </div>
@@ -25,18 +22,37 @@
         </div>
 
         <div class="input-group">
-          <input type="text" name="area" id="area" placeholder="Área de atuação" required>
+          <input type="password" name="senha" id="senha" placeholder="Senha" required>
         </div>
 
         <div class="input-group">
-          <input type="text" name="cargo" id="cargo" placeholder="Cargo" required>
+          <input type="text" name="cpf" id="cpf" placeholder="CPF">
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="telefone" id="telefone" placeholder="Telefone">
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="cargo" id="cargo" placeholder="Cargo">
+        </div>
+
+        <div class="input-group">
+          <input type="text" name="empresa" id="empresa" placeholder="Empresa">
         </div>
 
         <button type="submit" class="btn-register">Cadastre-se</button>
-        <button type="button" class="btn-login" onclick="window.location.href='/login'">
-          Fazer login
-        </button>
+        <button type="button" class="btn-login" onclick="window.location.href='/login'">Fazer login</button>
       </form>
+
+      <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const data = Object.fromEntries(new FormData(form).entries());
+          await register(data);
+        });
+      </script>
 
       <a href="#" class="guest-access">Entrar como visitante</a>
     </div>

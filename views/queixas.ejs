@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sintomas e Queixas - Protege+</title>
+  <link rel="stylesheet" href="/css/sintomas.css" />
+  <script src="/js/api.js"></script>
+</head>
+<body>
+  <div class="symptom-container">
+    <h1 class="app-title">Sintomas e Queixas</h1>
+    <div class="logout-area" onclick="logout()"><span class="logout-text">Logout</span></div>
+
+    <!-- Lista dinâmica de sintomas -->
+    <section class="symptom-section" id="symptom-section">
+      <div id="symptom-list">Carregando sintomas...</div>
+    </section>
+
+    <div style="margin:16px 0; display:flex; gap:12px;">
+      <button id="verifyBtn" class="btn-next">Verificar sintomas</button>
+    </div>
+
+    <section id="results" style="margin-top:16px"></section>
+  </div>
+
+  <script>
+    async function loadSintomas() {
+      const out = document.getElementById('symptom-list');
+      out.innerHTML = 'Carregando...';
+      const resp = await getSintomasPuros();
+      if (!resp.success) {
+        out.innerHTML = '<div>Erro ao carregar sintomas</div>';
+        return;
+      }
+      const sintomas = (resp.data && resp.data.sintomas) || [];
+      if (!sintomas || sintomas.length === 0) {
+        out.innerHTML = '<div>Nenhum sintoma encontrado</div>';
+        return;
+      }
+      out.innerHTML = '';
+      sintomas.forEach(item => {
+        const id = 's_' + item.codigo + '_' + Math.random().toString(36).slice(2,7);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'symptom-item';
+        wrapper.innerHTML = `<label><input type="checkbox" data-codigo="${item.codigo}" id="${id}"> ${item.nome} <small>(${item.codigo})</small></label>`;
+        out.appendChild(wrapper);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const verifyBtn = document.getElementById('verifyBtn');
+      verifyBtn.addEventListener('click', async () => {
+        const checked = Array.from(document.querySelectorAll('#symptom-list input[type=checkbox]:checked'));
+        const codes = checked.map(cb => cb.dataset.codigo);
+        const resEl = document.getElementById('results');
+        resEl.innerHTML = 'Buscando enfermidades...';
+        const resp = await verificarSintomas(codes);
+        if (!resp.success) {
+          resEl.innerHTML = '<div>Erro ao verificar sintomas</div>';
+          return;
+        }
+        const items = (resp.data && resp.data.enfermidades) || [];
+        if (items.length === 0) {
+          resEl.innerHTML = '<div>Nenhuma enfermidade encontrada</div>';
+          return;
+        }
+        resEl.innerHTML = '<ul>' + items.map(i => `<li><strong>${i.codigo}</strong> - ${i.nome || ''} (Grupo ${i.idGrupo})</li>`).join('') + '</ul>'; 
+      });
+
+      loadSintomas();
+    });
+  </script>
+</body>
+</html>

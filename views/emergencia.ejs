@@ -6,12 +6,13 @@
   <title>Serviços de Emergência - Protege+</title>
   <link rel="stylesheet" href="/css/emergencia.css" />
   <link rel="icon" href="/logo.png" type="image/png">
+  <script src="/js/api.js"></script>
 </head>
 <body>
   <div class="emergency-container">
     <!-- Cabeçalho (PROTEGE + e Logout) -->
     <h1 class="app-title">PROTEGE +</h1>
-    <div class="logout-area" onclick="window.location.href='/login'">
+    <div class="logout-area" onclick="logout()">
       <span class="logout-text">Logout</span>
     </div>
 
@@ -21,74 +22,60 @@
     </div>
 
     <!-- Lista/Seção de serviços de emergência (cards) -->
-    <section class="emergency-section" id="services-list">
-      <!-- Cada card segue o visual do Figma (caixa vermelha, texto branco, linha divisória e info à direita) -->
-      <article class="card-service">
-        <div class="card-left">
-          <div class="card-icon"></div>
-          <div class="card-title">Hospital Manoel Novaes</div>
-        </div>
-
-        <div class="card-right">
-          <div class="card-phone">3694-1122</div>
-          <div class="card-distance">10km</div>
-        </div>
-      </article>
-
-      <article class="card-service">
-        <div class="card-left">
-          <div class="card-icon"></div>
-          <div class="card-title">Hospital São Lucas</div>
-        </div>
-
-        <div class="card-right">
-          <div class="card-phone">3344-5566</div>
-          <div class="card-distance">6km</div>
-        </div>
-      </article>
-
-      <article class="card-service">
-        <div class="card-left">
-          <div class="card-icon"></div>
-          <div class="card-title">UPA Central</div>
-        </div>
-
-        <div class="card-right">
-          <div class="card-phone">192</div>
-          <div class="card-distance">3km</div>
-        </div>
-      </article>
-
-      <article class="card-service">
-        <div class="card-left">
-          <div class="card-icon"></div>
-          <div class="card-title">Samu</div>
-        </div>
-
-        <div class="card-right">
-          <div class="card-phone">192</div>
-          <div class="card-distance">—</div>
-        </div>
-      </article>
-    </section>
+    <section class="emergency-section" id="services-list">Carregando serviços...</section>
   </div>
 
   <script>
+    async function loadTelefones() {
+      const container = document.getElementById('services-list');
+      container.innerHTML = 'Carregando...';
+      const resp = await getTelefonesUteis();
+      if (!resp.success) {
+        container.innerHTML = '<div>Erro ao carregar telefones</div>';
+        return;
+      }
+      const telefones = (resp.data && resp.data.telefones) || [];
+      if (!telefones || telefones.length === 0) {
+        container.innerHTML = '<div>Nenhum serviço encontrado</div>';
+        return;
+      }
+      container.innerHTML = '';
+      telefones.forEach(t => {
+        const art = document.createElement('article');
+        art.className = 'card-service';
+        art.innerHTML = `
+          <div class="card-left">
+            <div class="card-icon"></div>
+            <div class="card-title">${t.unidade || 'Serviço'}</div>
+          </div>
+          <div class="card-right">
+            <div class="card-phone">${t.numero || '—'}</div>
+            <div class="card-distance">—</div>
+          </div>`;
+        container.appendChild(art);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTelefones();
+    });
+
     // Pesquisa cliente simples (filtra por título ou telefone)
     document.addEventListener('DOMContentLoaded', () => {
       const input = document.getElementById('search');
-      const list = Array.from(document.querySelectorAll('.card-service'));
 
       input.addEventListener('input', () => {
         const q = input.value.trim().toLowerCase();
+        const list = Array.from(document.querySelectorAll('.card-service'));
         list.forEach(card => {
-          const title = card.querySelector('.card-title').textContent.toLowerCase();
-          const phone = card.querySelector('.card-phone').textContent.toLowerCase();
+          const titleEl = card.querySelector('.card-title');
+          const phoneEl = card.querySelector('.card-phone');
+          const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+          const phone = phoneEl ? phoneEl.textContent.toLowerCase() : '';
           const match = q === '' || title.includes(q) || phone.includes(q);
           card.style.display = match ? 'flex' : 'none';
         });
       });
     });
-  </script>
 </body>
 </html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procedimentos - Protege+</title>
+  <link rel="stylesheet" href="/css/sintomas.css" />
+  <script src="/js/api.js"></script>
+</head>
+<body>
+  <div class="procedures-container">
+    <h1 class="app-title">Procedimentos Diagnósticos e Preventivos</h1>
+    <div class="logout-area" onclick="logout()"><span class="logout-text">Logout</span></div>
+
+    <div id="items" style="margin-top:16px">Carregando itens...</div>
+  </div>
+
+  <script>
+    // Show items for the Procedimentos group directly (prefer id=2)
+    async function loadProcedimentos() {
+      const itemsEl = document.getElementById('items');
+      itemsEl.innerHTML = 'Carregando itens...';
+
+      // Try to fetch grupos to resolve the correct id if it changed
+      const gruposResp = await getGruposCiap();
+      if (!gruposResp.success) {
+        itemsEl.innerHTML = '<div>Erro ao carregar grupos</div>';
+        return;
+      }
+      const grupos = (gruposResp.data && gruposResp.data.grupos) || [];
+
+      // prefer explicit id 2, fallback to name match
+      let target = grupos.find(g => g.id === 2) || grupos.find(g => /procedimento/i.test(g.componente));
+      if (!target) {
+        itemsEl.innerHTML = '<div>Grupo de Procedimentos não encontrado</div>';
+        return;
+      }
+
+      const resp2 = await getItensCiap(target.id);
+      if (!resp2.success) {
+        itemsEl.innerHTML = '<div>Erro ao carregar itens</div>';
+        return;
+      }
+      const items = (resp2.data && resp2.data.itens) || [];
+      if (items.length === 0) {
+        itemsEl.innerHTML = '<div>Nenhum item encontrado</div>';
+        return;
+      }
+      itemsEl.innerHTML = '<ul>' + items.map(i => `<li>${i.codigo} — ${i.nome}</li>`).join('') + '</ul>';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProcedimentos);
+  </script>
+</body>
+</html>

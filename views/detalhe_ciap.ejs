@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalhe - CIAP</title>
+  <link rel="stylesheet" href="/css/sintomas.css" />
+  <script src="/js/api.js"></script>
+  <style>
+    .detail-section { margin: 12px 0; }
+    .detail-title { font-weight: 600; margin-bottom: 6px; }
+    .back-link { display:inline-block; margin:8px 0; }
+  </style>
+</head>
+<body>
+  <div class="diagnostics-container">
+    <a class="back-link" href="/sintomas/diagnosticos">← Voltar aos Diagnósticos</a>
+    <h1 id="detalhe-title" class="app-title">Carregando...</h1>
+    <div id="detalhe-content">
+      <div>Carregando detalhes...</div>
+    </div>
+  </div>
+
+  <script>
+    // Get codigo from server-rendered variable or from URL as fallback
+    const serverCodigo = '<%= typeof codigo !== "undefined" ? codigo : "" %>';
+    function readCodigoFromUrl() {
+      const parts = location.pathname.split('/');
+      return parts[parts.length -1] || '';
+    }
+
+    async function renderDetalhe() {
+      const codigo = serverCodigo || readCodigoFromUrl();
+      if (!codigo) {
+        document.getElementById('detalhe-content').innerHTML = '<div>Código inválido</div>';
+        return;
+      }
+
+      const resp = await getDetalhesCiap(codigo);
+      if (!resp.success) {
+        document.getElementById('detalhe-content').innerHTML = '<div>Erro ao carregar detalhes</div>';
+        return;
+      }
+
+  const detalhe = resp.data && resp.data.detalhes;
+  const subSintomas = detalhe && detalhe.subSintomas ? detalhe.subSintomas : [];
+      if (!detalhe) {
+        document.getElementById('detalhe-title').textContent = 'Detalhe não encontrado';
+        document.getElementById('detalhe-content').innerHTML = '<div>Detalhe não encontrado para o código: ' + codigo + '</div>';
+        return;
+      }
+
+      document.getElementById('detalhe-title').textContent = `${detalhe.codigo} — ${detalhe.nomeLeigo || ''}`;
+
+      // Build HTML for optional sections
+      let html = '';
+
+      // Sintomas Associados (subSintomas) - may or may not exist
+      if (Array.isArray(subSintomas) && subSintomas.length > 0) {
+        html += '<div class="detail-section">';
+        html += '<div class="detail-title">Sintomas Associados</div>';
+        html += '<ul>' + subSintomas.map(s => `<li>${s.nome}</li>`).join('') + '</ul>';
+        html += '</div>';
+      }
+
+      // Sintomas Inclusos
+      if (detalhe.sintomasInclusos && detalhe.sintomasInclusos.trim() !== '') {
+        html += '<div class="detail-section">';
+        html += '<div class="detail-title">Sintomas Inclusos</div>';
+        html += `<div>${detalhe.sintomasInclusos}</div>`;
+        html += '</div>';
+      }
+
+      // Sintomas de Exclusão
+      if (detalhe.sintomasExclusao && detalhe.sintomasExclusao.trim() !== '') {
+        html += '<div class="detail-section">';
+        html += '<div class="detail-title">Sintomas de Exclusão</div>';
+        html += `<div>${detalhe.sintomasExclusao}</div>`;
+        html += '</div>';
+      }
+
+      // Outros Sintomas
+      if (detalhe.outrosSintomas && detalhe.outrosSintomas.trim() !== '') {
+        html += '<div class="detail-section">';
+        html += '<div class="detail-title">Outros Sintomas</div>';
+        html += `<div>${detalhe.outrosSintomas}</div>`;
+        html += '</div>';
+      }
+
+      // Possíveis CID-10
+      if (detalhe.possiveisCid10 && detalhe.possiveisCid10.trim() !== '') {
+        html += '<div class="detail-section">';
+        html += '<div class="detail-title">Possíveis CID-10</div>';
+        html += `<div>${detalhe.possiveisCid10}</div>`;
+        html += '</div>';
+      }
+
+      if (html === '') html = '<div>Nenhuma informação adicional disponível para este item.</div>';
+
+      document.getElementById('detalhe-content').innerHTML = html;
+    }
+
+    document.addEventListener('DOMContentLoaded', renderDetalhe);
+  </script>
+</body>
+</html>

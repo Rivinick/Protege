@@ -1,34 +1,27 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sintomas - Categorias</title>
-  <link rel="stylesheet" href="/css/sintomas-categorias.css" />
-  <link rel="icon" href="/logo.png" type="image/png">
+  <title>Sintomas e Enfermidades - Protege+</title>
+  <link rel="stylesheet" href="/css/sintomas.css" />
+  <script src="/js/api.js"></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1 class="logo">PROTEGE +</h1>
-      <div class="logout">
-        <div class="logout-icon"></div>
-        <span>Logout</span>
-      </div>
-    </header>
+  <div class="symptom-container">
+    <h1 class="app-title">Sintomas e Enfermidades</h1>
+    <div class="logout-area" onclick="logout()">
+      <span class="logout-text">Logout</span>
+    </div>
 
-    <main class="symptom">
-      <div class="category"><span>Gerais</span></div>
-      <div class="category"><span>Musculoesqueléticos</span></div>
-      <div class="category"><span>Neurológicos e Psicológicos</span></div>
-      <div class="category"><span>Cardiovasculares</span></div>
-      <div class="category"><span>Respiratórios</span></div>
-      <div class="category"><span>Gastrointestinais</span></div>
-      <div class="category"><span>Oculares</span></div>
-      <div class="category"><span>Auditivos</span></div>
-      <div class="category"><span>Dermatológicos</span></div>
-      <div class="category"><span>Geniturinários</span></div>
-    </main>
+    <!-- Opções principais -->
+    <div style="display:flex; gap:12px; margin:12px 0;">
+      <button onclick="window.location.href='/sintomas/queixas'">Sintomas e queixas</button>
+      <button onclick="window.location.href='/sintomas/procedimentos'">Procedimentos diagnósticos e preventivos</button>
+      <button onclick="window.location.href='/sintomas/diagnosticos'">Diagnósticos e doenças</button>
+    </div>
+
+    <p>Escolha uma opção acima para ver o conteúdo específico.</p>
   </div>
 </body>
 </html>

@@ -1,9 +1,31 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
 const path = require('path');
+
+const authRoutes = require('./src/routes/authRoutes');
+const ciapRoutes = require('./src/routes/ciapRoutes');
+const emergenciaRoutes = require('./src/routes/emergenciaRoutes');
 
 const app = express();
 const port = 3000;
+
+// Session configuration
+app.use(session({
+    secret: 'protege-plus-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// Improved error reporting for uncaught exceptions/rejections
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err && err.stack ? err.stack : err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 
 // Configuração do EJS
 app.set('view engine', 'ejs');
@@ -11,18 +33,22 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('layout', 'layout');
 app.use(expressLayouts);
 
-// Servir arquivos estáticos (CSS, Imagens, JS do public)
+// Middleware
 app.use(express.static(path.join(__dirname, 'public')));
-
-// --- ADIÇÃO 1: Habilitar o "Leitor" de Formulários ---
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json()); 
+
+// Mount API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/ciap', ciapRoutes);
+app.use('/api/emergencia', emergenciaRoutes);
 
 
 // --- ROTAS PRINCIPAIS ---
 
+// Make the home screen the first screen when accessing the site
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.render('home', { layout: false });
 });
 
 app.get('/dashboard', (req, res) => {
@@ -64,7 +90,27 @@ app.get('/emergencia', (req, res) => {
 });
 
 app.get('/sintomas', (req, res) => {
-    res.render('sintomas');
+    res.render('sintomas', { layout: false });
+});
+
+// Sintomas sub-pages
+app.get('/sintomas/queixas', (req, res) => {
+    // Render dedicated queixas view (symptom checklist + verify)
+    res.render('queixas', { layout: false });
+});
+
+app.get('/sintomas/procedimentos', (req, res) => {
+    res.render('procedimentos', { layout: false });
+});
+
+app.get('/sintomas/diagnosticos', (req, res) => {
+    res.render('diagnosticos', { layout: false });
+});
+
+// Detalhes de um item CIAP (página de detalhe)
+app.get('/sintomas/detalhes/:codigo', (req, res) => {
+    const codigo = req.params.codigo;
+    res.render('detalhe_ciap', { layout: false, codigo });
 });
 
 // --- ADIÇÃO 2: Rotas do Novo Formulário de Exemplo ---
