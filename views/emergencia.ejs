@@ -26,56 +26,77 @@
   </div>
 
   <script>
-    async function loadTelefones() {
-      const container = document.getElementById('services-list');
-      container.innerHTML = 'Carregando...';
-      const resp = await getTelefonesUteis();
-      if (!resp.success) {
-        container.innerHTML = '<div>Erro ao carregar telefones</div>';
-        return;
+    const listContainer = document.getElementById('services-list');
+    const searchInput = document.getElementById('search');
+    let allCards = []; 
+
+    // 1. Roda quando a página carrega
+    document.addEventListener('DOMContentLoaded', () => {
+      // (seu código de pesquisa pode vir aqui)
+      getGeolocation(); // Inicia o processo de geolocalização
+    });
+
+    // 2. Pede a localização ao usuário
+    function getGeolocation() {
+      if ('geolocation' in navigator) {
+        listContainer.innerHTML = '<p style="color: white; text-align: center;">Obtendo sua localização...</p>';
+        
+        navigator.geolocation.getCurrentPosition(
+          // Sucesso
+          (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            // 3. CHAMA A SUA API NO BACK-END
+            fetchHospitais(lat, lon);
+          },
+          // Erro
+          (error) => {
+            console.error('Erro ao obter localização:', error);
+            listContainer.innerHTML = '<p style="color: white; text-align: center;">Não foi possível obter sua localização.</p>';
+          }
+        );
+      } else {
+        listContainer.innerHTML = '<p style="color: white; text-align: center;">Geolocalização não é suportada.</p>';
       }
-      const telefones = (resp.data && resp.data.telefones) || [];
-      if (!telefones || telefones.length === 0) {
-        container.innerHTML = '<div>Nenhum serviço encontrado</div>';
-        return;
-      }
-      container.innerHTML = '';
-      telefones.forEach(t => {
-        const art = document.createElement('article');
-        art.className = 'card-service';
-        art.innerHTML = `
-          <div class="card-left">
-            <div class="card-icon"></div>
-            <div class="card-title">${t.unidade || 'Serviço'}</div>
-          </div>
-          <div class="card-right">
-            <div class="card-phone">${t.numero || '—'}</div>
-            <div class="card-distance">—</div>
-          </div>`;
-        container.appendChild(art);
-      });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      loadTelefones();
-    });
+    // 4. Busca os hospitais no back-end
+    async function fetchHospitais(latitude, longitude) {
+      try {
+        // CHAMA A ROTA QUE VAMOS CRIAR NO ARQUIVO emergenciaRoutes.js
+        const response = await fetch(`/api/emergencia/proximos?lat=${latitude}&lon=${longitude}`);
+        
+        const hospitais = await response.json(); 
 
-    // Pesquisa cliente simples (filtra por título ou telefone)
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('search');
+        listContainer.innerHTML = ''; // Limpa a lista
+        
+        if (!hospitais || hospitais.length === 0) {
+           listContainer.innerHTML = '<p style="color: white; text-align: center;">Nenhum hospital encontrado.</p>';
+           return;
+        }
 
-      input.addEventListener('input', () => {
-        const q = input.value.trim().toLowerCase();
-        const list = Array.from(document.querySelectorAll('.card-service'));
-        list.forEach(card => {
-          const titleEl = card.querySelector('.card-title');
-          const phoneEl = card.querySelector('.card-phone');
-          const title = titleEl ? titleEl.textContent.toLowerCase() : '';
-          const phone = phoneEl ? phoneEl.textContent.toLowerCase() : '';
-          const match = q === '' || title.includes(q) || phone.includes(q);
-          card.style.display = match ? 'flex' : 'none';
+        // 5. Constrói os cards com os dados REAIS vindos do back-end
+        hospitais.forEach(hospital => {
+          const art = document.createElement('article');
+          art.className = 'card-service';
+          art.innerHTML = `
+            <div class="card-left">
+              <div class="card-icon"></div>
+              <div class="card-title">${hospital.nome || 'Serviço'}</div>
+            </div>
+            <div class="card-right">
+              <div class="card-phone">${hospital.telefone || '—'}</div>
+              <div class="card-distance">${hospital.distancia || '—'}</div>
+            </div>`;
+          listContainer.appendChild(art);
         });
-      });
-    });
+        
+        allCards = Array.from(document.querySelectorAll('.card-service'));
+      } catch (err) {
+        console.error('Erro ao buscar API:', err);
+      }
+    }
+  </script>
 </body>
 </html>
