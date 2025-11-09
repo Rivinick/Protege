@@ -28,29 +28,25 @@
   <script>
     const listContainer = document.getElementById('services-list');
     const searchInput = document.getElementById('search');
-    let allCards = []; 
+    let allCards = []; // Guarda os cards para a pesquisa
 
     // 1. Roda quando a página carrega
     document.addEventListener('DOMContentLoaded', () => {
-      // (seu código de pesquisa pode vir aqui)
       getGeolocation(); // Inicia o processo de geolocalização
+      setupSearchFilter(); 
     });
 
-    // 2. Pede a localização ao usuário
+    // 2. GEOLOCALIZAÇÃO: Pede a localização ao usuário
     function getGeolocation() {
       if ('geolocation' in navigator) {
         listContainer.innerHTML = '<p style="color: white; text-align: center;">Obtendo sua localização...</p>';
         
         navigator.geolocation.getCurrentPosition(
-          // Sucesso
           (position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            
-            // 3. CHAMA A SUA API NO BACK-END
             fetchHospitais(lat, lon);
           },
-          // Erro
           (error) => {
             console.error('Erro ao obter localização:', error);
             listContainer.innerHTML = '<p style="color: white; text-align: center;">Não foi possível obter sua localização.</p>';
@@ -61,41 +57,61 @@
       }
     }
 
-    // 4. Busca os hospitais no back-end
+    // 3. API: Busca os hospitais no back-end
     async function fetchHospitais(latitude, longitude) {
       try {
-        // CHAMA A ROTA QUE VAMOS CRIAR NO ARQUIVO emergenciaRoutes.js
         const response = await fetch(`/api/emergencia/proximos?lat=${latitude}&lon=${longitude}`);
-        
         const hospitais = await response.json(); 
 
-        listContainer.innerHTML = ''; // Limpa a lista
+        listContainer.innerHTML = ''; 
         
         if (!hospitais || hospitais.length === 0) {
            listContainer.innerHTML = '<p style="color: white; text-align: center;">Nenhum hospital encontrado.</p>';
            return;
         }
 
-        // 5. Constrói os cards com os dados REAIS vindos do back-end
         hospitais.forEach(hospital => {
           const art = document.createElement('article');
           art.className = 'card-service';
           art.innerHTML = `
-            <div class="card-left">
-              <div class="card-icon"></div>
-              <div class="card-title">${hospital.nome || 'Serviço'}</div>
-            </div>
-            <div class="card-right">
-              <div class="card-phone">${hospital.telefone || '—'}</div>
-              <div class="card-distance">${hospital.distancia || '—'}</div>
+            <div class="card-content">
+              <div class="card-top-row">
+                <div class="card-title">${hospital.nome || 'Serviço'}</div>
+              </div>
+              <div class="card-bottom-row">
+                <div class="card-phone">${hospital.telefone || '—'}</div>
+                <div class="card-distance">${hospital.distancia || '—'}</div>
+              </div>
             </div>`;
           listContainer.appendChild(art);
         });
-        
+
+        // Atualiza a lista 'allCards' para a pesquisa funcionar
         allCards = Array.from(document.querySelectorAll('.card-service'));
+
       } catch (err) {
         console.error('Erro ao buscar API:', err);
       }
+    }
+
+    // Esta função filtra a lista de cards
+    function setupSearchFilter() {
+      // O evento 'input' dispara toda vez que você digita ou apaga uma letra
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        
+        allCards.forEach(card => {
+          // Pega o texto do título e do telefone/endereço
+          const title = card.querySelector('.card-title').textContent.toLowerCase();
+          const phone = card.querySelector('.card-phone').textContent.toLowerCase();
+          
+          // Verifica se a query está no título OU no telefone/endereço
+          const isMatch = title.includes(query) || phone.includes(query);
+          
+          // O seu .card-service usa 'display: flex', então usamos 'flex' para mostrar
+          card.style.display = isMatch ? 'flex' : 'none';
+        });
+      });
     }
   </script>
 </body>

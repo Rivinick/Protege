@@ -15,55 +15,90 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.asin(Math.sqrt(a));
 }
 
-// --- ROTA DE API COM DADOS REAIS ---
-// Esta rota será acessada como: GET /api/emergencia/proximos
+// --- ROTA DE API COM DADOS REAIS E NÚMERO DE TELEFONE ---
 router.get('/proximos', async (req, res) => {
     
-    // 1. RECEBE a localização que o front-end (emergencia.ejs) enviou
     const { lat, lon } = req.query;
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY; // Pega do arquivo .env
+    const apiKey = process.env.GOOGLE_PLACES_API_KEY;
 
     if (!lat || !lon) {
         return res.status(400).json({ error: 'Latitude e longitude são obrigatórias.' });
     }
-
     if (!apiKey) {
         console.error('Chave de API do Google não encontrada. Verifique o .env');
         return res.status(500).json({ error: 'Erro interno do servidor.' });
     }
 
-    // 2. Monta a URL da API do Google
-    const radius = 5000; // 5km
-    const type = 'hospital';
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=${radius}&type=${type}&key=${apiKey}`;
+    // 1. PRIMEIRA CHAMADA: Encontrar hospitais próximos
+    const searchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=5000&type=hospital&key=${apiKey}`;
 
-    console.log('--- API: Buscando hospitais reais no Google ---');
+    console.log('--- API: Buscando hospitais (Passo 1/2) ---');
     console.log('Localização do usuário:', { lat, lon });
 
     try {
-        // 3. Chama a API do Google
-        const response = await axios.get(url);
-        const results = response.data.results;
+        const response = await axios.get(searchUrl);
+        let results = response.data.results; // Pega os resultados
 
-        // 4. Formata os dados do Google
-        const hospitais = results.map(hospital => {
+        // --- MUDANÇA AQUI: FILTRAGEM RÍGIDA ---
+        // Filtra a lista para incluir apenas locais que parecem ser relevantes
+        // (Isso remove "falsos positivos" como lojas ou hotéis)
+        const keywords = ['hospital', 'clínica', 'saúde', 'pronto', 'atendimento', 'upa', 'maternidade', 'emergência'];
+        
+        results = results.filter(hospital => {
+            const nomeEmMinusculo = hospital.name.toLowerCase();
+            // Verifica se o nome do local contém alguma das nossas palavras-chave
+            return keywords.some(keyword => nomeEmMinusculo.includes(keyword));
+        });
+        // --- FIM DA MUDANÇA ---
+
+
+        // 2. SEGUNDA CHAMADA: Buscar o telefone dos resultados filtrados
+        console.log(`--- API: Buscando detalhes (telefone) para ${results.length} resultados filtrados (Passo 2/2) ---`);
+
+        const hospitaisPromises = results.map(async (hospital) => {
             const hospLat = hospital.geometry.location.lat;
             const hospLon = hospital.geometry.location.lng;
             const distancia = getDistance(lat, lon, hospLat, hospLon);
 
+            let telefone = hospital.vicinity || '---';
+
+            try {
+                const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${hospital.place_id}&fields=formatted_phone_number&key=${apiKey}`;
+                const detailsResponse = await axios.get(detailsUrl);
+                
+                if (detailsResponse.data.result && detailsResponse.data.result.formatted_phone_number) {
+                    telefone = detailsResponse.data.result.formatted_phone_number;
+                }
+            } catch (detailsError) {
+                console.error(`Erro ao buscar detalhes para ${hospital.name}:`, detailsError.message);
+            }
+
             return {
                 nome: hospital.name,
-                telefone: hospital.formatted_phone_number || hospital.vicinity || '---', 
-                distancia: `${distancia.toFixed(1)} km` // "1.2 km"
+                telefone: telefone,
+                rawDistancia: distancia
             };
         });
 
-        // 5. Envia os dados REAIS para o front-end
-        console.log(`Encontrados ${hospitais.length} hospitais.`);
-        res.json(hospitais);
+        let hospitais = await Promise.all(hospitaisPromises);
+
+        // Ordena o array pela menor 'rawDistancia'
+        hospitais.sort((a, b) => a.rawDistancia - b.rawDistancia);
+
+        // Formata depois de ordenar
+        const hospitaisFormatados = hospitais.map(h => {
+            return {
+                nome: h.nome,
+                telefone: h.telefone,
+                distancia: `${h.rawDistancia.toFixed(1)} km`
+            };
+        });
+
+        console.log(`Encontrados e ordenados ${hospitaisFormatados.length} hospitais com detalhes.`);
+        res.json(hospitaisFormatados); 
 
     } catch (error) {
-        console.error('Erro ao chamar a API do Google:', error.message);
+        console.error('Erro ao chamar a API do Google (NearbySearch):', error.message);
         res.status(500).json({ error: 'Erro ao buscar hospitais' });
     }
 });
