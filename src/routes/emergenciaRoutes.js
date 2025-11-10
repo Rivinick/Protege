@@ -30,7 +30,7 @@ router.get('/proximos', async (req, res) => {
     }
 
     // 1. PRIMEIRA CHAMADA: Encontrar hospitais próximos
-    const searchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=5000&type=hospital&key=${apiKey}`;
+    const searchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=15000&type=hospital&key=${apiKey}`;
 
     console.log('--- API: Buscando hospitais (Passo 1/2) ---');
     console.log('Localização do usuário:', { lat, lon });

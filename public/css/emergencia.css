@@ -1,177 +1,193 @@
 /* Emergência */
 
-:root {
-    --main-red: #D90D1E;
-    --main-green: #038C8C;
-    --light: #F2F2F2;
-    --card-width: 273px;
+:root{
+  --main-red: #D90D1E;
+  --main-green: #038C8C;
+  --light: #F2F2F2;
+  --card-width: 273px; /* Largura padrão dos elementos */
 }
 
 /* Reset / baseline */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* { 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
 }
-
 body {
-    margin: 0;
-    font-family: 'Nunito Sans', sans-serif;
-    background: var(--light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  margin: 0;
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 /* Container fixo (protótipo mobile) */
 .emergency-container {
-    width: 380px;
-    min-height: auto;
-    background: var(--light);
+  position: relative; /* Base para o posicionamento absoluto */
+  width: 320px;
+  height: 568px;
+  background: var(--light);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-radius: 4px;
 }
 
+/* Cabeçalho (do navbar.ejs) */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute; /* POSICIONAMENTO RESTAURADO */
+  width: 100%;
+  padding: 29px 24px 0 24px;
+  top: 0;
+  left: 0;
+}
+.navbar .logo {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 27px;
+  color: var(--main-red);
+  text-decoration: none;
+}
+.navbar .logout {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 19px;
+  color: var(--main-green);
+  text-decoration: none;
+}
+
+
+/* BARRA DE PESQUISA CORRIGIDA */
 .search-wrap {
-    position: relative;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    border: 2px solid var(--main-green);
-    border-radius: 6px;
-    background-color: #ffffff;
-    margin: 15px 0;
-
-    /* Ícone da Lupa (SVG embutido usando a cor --main-green) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23038C8C' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    /* Posição: 12px da direita, centro vertical */
-    background-position: calc(100% - 12px) center;
+  position: absolute; /* POSICIONAMENTO RESTAURADO */
+  width: var(--card-width);
+  left: calc(50% - var(--card-width)/2);
+  top: 138px;
+  
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--main-green); 
+  border-radius: 6px;
+  background-color: #ffffff;
+  
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23038C8C' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 12px) center; 
 }
 
-.search-wrap input[type="search"] {
-    width: 100%;
-    /* A altura agora é controlada pelo padding */
-    border: none; /* Remove a borda do input */
-    background: transparent; /* Remove o fundo do input */
-    box-shadow: none; /* Remove a sombra do input */
-    border-radius: 6px; /* Para os cantos */
-    outline: none;
-    font-size: 14px;
-    color: #222;
-
-    /* Impede que o texto vá para baixo do ícone */
-    padding: 10px 40px 10px 12px;
-
-    &:focus{
-        background-color: #F2F2F2;
-    }
+.search-wrap input[type="search"]{
+  width: 100%;
+  padding: 10px 12px; 
+  border: none; 
+  background: transparent; 
+  box-shadow: none; 
+  border-radius: 6px; 
+  font-size: 14px; /* Aumentado */
+  color: #222;
+  padding-right: 40px; 
+  outline: none;
 }
-
-/* Bônus: Esconde o "X" de limpar padrão do navegador */
 .search-wrap input[type="search"]::-webkit-search-cancel-button {
-    display: none;
+  display: none;
+}
+.search-wrap input[type="search"]:focus {
+  background-color: #f7f7f7;
 }
 
-/* Lista de serviços (coluna) */
+/* LISTA DE SERVIÇOS E CARDS CORRIGIDOS */
 .emergency-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    position: relative;
-    width: var(--card-width);
-    min-height: 420px;
-    left: calc(50% - var(--card-width) / 2 - 1px);
-    padding-bottom: 8px;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  position: absolute; /* POSICIONAMENTO RESTAURADO */
+  width: var(--card-width);
+  left: calc(50% - var(--card-width)/2);
+  top: 186px; /* Espaçamento correto */
+  bottom: 20px; /* Define a altura máxima */
+  padding-bottom: 8px;
+  overflow-y: auto;
 }
 
 /* Scrollbar */
-.emergency-section::-webkit-scrollbar {
-    width: 6px;
-}
-
-.emergency-section::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.12);
-    border-radius: 6px;
-}
-
+.emergency-section::-webkit-scrollbar { width: 6px; }
+.emergency-section::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
 
 /* O Card Vermelho (Container Principal) */
 .card-service {
-    display: flex;
-    align-items: center;
-    width: 100%; /* Ocupa a largura total da .emergency-section */
-    min-height: 80px; /* Altura mínima, mas pode crescer se o texto for longo */
-    background: var(--main-red);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    padding: 16px; /* Espaçamento interno */
-    color: var(--light);
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 80px;
+  background: var(--main-red);
+  box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
+  border-radius: 10px;
+  padding: 16px;
+  color: var(--light);
+  cursor: pointer;
 }
-
 .card-service:hover {
-    transform: translateY(-4px);
-    transition: transform 150ms ease;
+  transform: translateY(-4px);
+  transition: transform 150ms ease;
 }
 
 /* O Bloco de Conteúdo (agrupa todo o texto) */
 .card-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
 }
 
 /* Linha de Cima (Título) */
 .card-top-row {
-    width: 100%;
-
-    border-bottom: 1px solid var(--light);
+  width: 100%;
+  border-bottom: 1px solid var(--light); /* Linha branca */
 }
-
 .card-title {
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 1.3;
-    color: var(--light);
-    margin: 0;
-    white-space: normal;
-
-    padding-bottom: 5px; /* Espaço entre o título e a linha */
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--light);
+  margin: 0;
+  white-space: normal;
+  padding-bottom: 5px; /* Espaço para a linha */
 }
 
 /* Linha de Baixo (Telefone/Endereço + Distância) */
 .card-bottom-row {
-    display: flex;
-    justify-content: space-between; /* [TELEFONE] ... [DISTÂNCIA] */
-    align-items: flex-end;
-    margin-top: 8px; /* Espaço entre título e linha de baixo */
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 8px;
+  width: 100%;
 }
 
 /* O Telefone ou Endereço (lado esquerdo) */
 .card-phone {
-    flex: 1; /* Ocupa o espaço, empurrando a distância */
-    min-width: 0;
-    font-weight: 700;
-    font-size: 13px;
-    color: #f0f0f0;
-    line-height: 1.4;
-    padding-right: 10px; /* Espaço para não colar na distância */
-    white-space: normal; /* Permite que o endereço quebre a linha */
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: #f0f0f0;
+  line-height: 1.4;
+  padding-right: 10px;
+  white-space: normal;
 }
 
 /* A Distância (lado direito) */
 .card-distance {
-    flex-shrink: 0; /* Impede que seja esmagado */
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 18px;
-    color: var(--light);
-    text-align: right;
-    white-space: nowrap; /* "0.9 km" nunca vai quebrar a linha */
-    opacity: 0.9;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--light);
+  text-align: right;
+  white-space: nowrap;
+  opacity: 0.9;
 }
