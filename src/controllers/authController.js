@@ -50,7 +50,7 @@ const register = async (req, res) => {
 
 const logout = (req, res) => {
     req.session.destroy();
-    res.json({ success: true });
+    res.redirect('/login');
 };
 
 const checkAuth = (req, res, next) => {
