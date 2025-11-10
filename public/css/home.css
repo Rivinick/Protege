@@ -106,3 +106,88 @@ body {
     background-repeat: no-repeat;
     border: none;
 }
+
+/* Ajuste no container para caber o header e ter altura automática */
+.home-container {
+    padding: 20px; /* Adiciona um respiro nas laterais */
+    height: auto; /* Garante que a altura se ajuste ao conteúdo */
+    min-height: 100vh; /* Ocupa a tela toda se o conteúdo for pequeno */
+}
+
+/* Estilos para o Cabeçalho (título e logout) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px; /* Espaço entre header e botões */
+}
+
+.app-title {
+    font-size: 22px; 
+    font-weight: 700;
+    color: #D90D1E; /* Vermelho principal */
+    flex-grow: 1; /* Faz o título ocupar o espaço */
+}
+
+/* Estilo do botão de Logout (para parecer o ícone de usuário da home) */
+.logout-area {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #D90D1E; /* Borda vermelha */
+    border-radius: 50%; /* Círculo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #fff;
+
+    background-image: url('/assets/icon_user_navbar.svg'); 
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0; /* Impede que o ícone encolha */
+}
+
+.logout-text {
+     display: none; /* Esconde o texto "Logout" de dentro do span */
+}
+
+/* Garante que os botões (agora links <a>) não tenham sublinhado */
+.button {
+    text-decoration: none;
+}
+
+
+#queixas-icon {
+    background-color: transparent;
+    background-image: url('/images/icone-sintomas.png'); /* CRIE ESTA IMAGEM */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    width: 58px; 
+    height: 53px;
+}
+
+#procedimentos-icon {
+    background-color: transparent;
+    background-image: url('/images/icone-sintomas.png'); /* CRIE ESTA IMAGEM */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    width: 58px;
+    height: 53px;
+}
+
+#diagnosticos-icon {
+    background-color: transparent;
+    background-image: url('/images/icone-sintomas.png'); /* CRIE ESTA IMAGEM */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    width: 58px;
+    height: 53px;
+}

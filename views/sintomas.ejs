@@ -4,24 +4,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sintomas e Enfermidades - Protege+</title>
-  <link rel="stylesheet" href="/css/sintomas.css" />
+  
+  <link rel="stylesheet" href="/css/home.css" />
+  
   <script src="/js/api.js"></script>
 </head>
 <body>
-  <div class="symptom-container">
-    <h1 class="app-title">Sintomas e Enfermidades</h1>
-    <div class="logout-area" onclick="logout()">
-      <span class="logout-text">Logout</span>
+  <div class="home-container">
+
+    <div class="header">
+      <h1 class="app-title">Sintomas e Enfermidades</h1>
+      
+      <div class="logout-area" onclick="logout()" title="Logout">
+        <span class="logout-text"></span> </div>
     </div>
 
-    <!-- Opções principais -->
-    <div style="display:flex; gap:12px; margin:12px 0;">
-      <button onclick="window.location.href='/sintomas/queixas'">Sintomas e queixas</button>
-      <button onclick="window.location.href='/sintomas/procedimentos'">Procedimentos diagnósticos e preventivos</button>
-      <button onclick="window.location.href='/sintomas/diagnosticos'">Diagnósticos e doenças</button>
-    </div>
+    <div class="options">
 
-    <p>Escolha uma opção acima para ver o conteúdo específico.</p>
-  </div>
+      <a href="/sintomas/queixas" class="button">
+        <div class="icon" id="queixas-icon"></div>
+        <span class="button-text">Sintomas e queixas</span>
+      </a>
+
+      <a href="/sintomas/procedimentos" class="button">
+        <div class="icon" id="procedimentos-icon"></div>
+        <span class="button-text">Procedimentos diagnósticos e preventivos</span>
+      </a>
+
+      <a href="/sintomas/diagnosticos" class="button">
+        <div class="icon" id="diagnosticos-icon"></div>
+        <span class="button-text">Diagnósticos e doenças</span>
+      </a>
+
+    </div>
+    </div>
 </body>
 </html>
