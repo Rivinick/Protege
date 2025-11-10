@@ -1,38 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Protege+ - Início</title>
     <link rel="stylesheet" href="/css/home.css">
     <link rel="icon" href="/logo.png" type="image/png">
     <script src="/js/api.js"></script>
-  </head>
-  <body>
-    <div class="home-container">
-      <h1 class="app-title">PROTEGE +</h1>
-
-      <div class="logout-area">
-        <span class="logout-text" onclick="logout()">Login</span>
-      </div>
-
-      <div class="options">
+</head>
+<body>
+<div class="home-container">
+    <%- include('./partials/navbar'); %>
+    <div class="options">
         <div class="button" onclick="window.location.href='/sintomas'">
-          <div class="icon" id="sintomas-icon"></div>
-          <span class="button-text">Sintomas &amp; Enfermidades</span>
+            <div class="icon" id="sintomas-icon"></div>
+            <span class="button-text">Sintomas &amp; Enfermidades</span>
         </div>
 
         <div class="button" onclick="window.location.href='/emergencia'">
-  <div class="icon" id="emergencia-icon"></div>
-  <span class="button-text">Serviços de Emergência</span>
+            <div class="icon" id="emergencia-icon"></div>
+            <span class="button-text">Serviços de Emergência</span>
         </div>
 
 
         <div class="button" onclick="window.location.href='/teste'">
-          <div class="icon" id="teste-icon"></div>
-          <span class="button-text">Teste de Conhecimento</span>
+            <div class="icon" id="teste-icon"></div>
+            <span class="button-text">Teste de Conhecimento</span>
         </div>
-      </div>
     </div>
-  </body>
+</div>
+</body>
 </html>

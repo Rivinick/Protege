@@ -1,0 +1,124 @@
+<div class="header-container">
+    <h1 class="app-title">PROTEGE +</h1>
+    <nav>
+        <ul class="menu">
+            <li>
+                <img src="assets/icon_user_navbar.svg" alt="ícone de usuário">
+                <ul>
+                    <li>
+                        <button onclick="window.location.href='/login'">Entrar</button>
+                    </li>
+                    <li>
+                        <form action="api/auth/logout" method="POST">
+                            <button type="submit">Sair</button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<style>
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: calc(100% - 30px);
+        padding: 0 15px;
+    }
+
+    nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .menu {
+        list-style: none;
+        float: left;
+    }
+
+    .menu li {
+        position: relative;
+        float: left;
+    }
+
+    .menu li a {
+        color: #D90D1E;
+        text-decoration: none;
+        padding: 5px;
+        display: block;
+    }
+
+    .menu li a:hover {
+        background: #D90D1E;
+        color: #fff;
+        border-radius: 8px;
+    }
+
+    .menu li ul {
+        position: absolute;
+        top: calc(100% - 1px);
+        left: -50px;
+        display: none;
+        z-index: 1000;
+        min-width: 80px;
+        margin-top: 0;
+        background-color: #fff;
+        padding: 6px 0;
+        border-radius: 8px;
+    }
+
+    .menu li:hover > ul,
+    .menu li:focus-within > ul,
+    .menu li.over > ul,
+    .menu li ul:hover {
+        display: block;
+    }
+
+    .menu li ul li {
+        display: block;
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+    }
+
+    .menu li ul li a:focus,
+    .menu li ul li a:hover {
+        background: #F2F2F2;
+        color: #D90D1E;
+        outline: none;
+    }
+
+    .menu li img {
+        width: 30px;
+        border: 2px solid #D90D1E;
+        border-radius: 30%;
+        padding: 5px;
+    }
+
+    li button {
+        background: none;
+        border: none;
+        color: #D90D1E;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 7px;
+        width: 100%;
+
+        &:hover {
+            background: #F2F2F2;
+            color: #D90D1E;
+            border-radius: 8px;
+        }
+    }
+
+    .app-title {
+        font-weight: 700;
+        font-size: 20px;
+        color: #D90D1E;
+        white-space: nowrap;
+    }
+</style>
