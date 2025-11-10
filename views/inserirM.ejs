@@ -1,0 +1,44 @@
+<%- include("./head.ejs"); %>
+    
+ <form action="inserirM" method="post">  
+ <!-- Dados para inserir tabela mestre  -->  
+ <div>  
+ <label for="">Descricao</label>  
+ <input type="text" name="Descricao" class="form-control" value="<%= dados.Descricao %>">  
+ </div>  
+ <div>  
+ <label for="">Resposta_correta</label>  
+ <input type="text" name="Resposta_correta" class="form-control" value="<%= dados.Resposta_correta %>">  
+ </div>  
+ <div>  
+ <label for="">IdPessoa_FK</label>  
+ <input type="text" name="IdPessoa_FK" class="form-control" value="<%= dados.IdPessoa_FK %>">  
+ </div>  
+ <div>  
+ <label for="">IdProcedimento_FK</label>  
+ <input type="text" name="IdProcedimento_FK" class="form-control" value="<%= dados.IdProcedimento_FK %>">  
+ </div>  
+ <br>  
+ <!-- Dados para inserir tabela detalhes  -->  
+ <h4>Registros Relacionados a tabela Mestre</h4>  
+ <div>  
+ <label for="">Letra</label>  
+ <input class="form-control" type="text" name="Letra" value="<%= dados.Letra %>" />  
+ </div>  
+ <div>  
+ <label for="">DescricaoResposta</label>  
+ <input class="form-control" type="text" name="DescricaoResposta" value="<%= dados.DescricaoResposta %>" />  
+ </div>  
+ <br>  
+ <input class="btn btn-primary" id="button1" type="submit" name="btIncuirPub" value="Inserir" />  
+ <a href="/" class="btn btn-outline-primary btn-sm">Voltar</a>  
+ </form>  
+ <body>  
+ </div>  
+ </div>          
+ </div>      
+ </body>  
+ <footer>  
+ <p>&copy; 2020</p>  
+ </footer>  
+ </html> 

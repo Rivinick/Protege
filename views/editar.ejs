@@ -1,0 +1,54 @@
+<%- include("./head.ejs"); %>
+ <h4>Editar registro de mestre</h4>  
+ <form action="/editar/<%= dados.IdQuestao %>/<%= dados.IdResposta %>" method="post">  
+   <div class="form-horizontal">  
+   
+ </div>   
+  <div class="form-group">     
+ <label>IdQuestao</label>    
+ <input type="text" class="form-control form-control-sm" name="IdQuestao" value="<%= dados.IdQuestao %> ">    
+ </div>   
+  <div class="form-group">     
+ <label>Descricao</label>    
+ <input type="text" class="form-control form-control-sm" name="Descricao" value="<%= dados.Descricao %> ">    
+ </div>   
+  <div class="form-group">     
+ <label>Resposta_correta</label>    
+ <input type="text" class="form-control form-control-sm" name="Resposta_correta" value="<%= dados.Resposta_correta %> ">    
+ </div>   
+  <div class="form-group">     
+ <label>IdPessoa_FK</label>    
+ <input type="text" class="form-control form-control-sm" name="IdPessoa_FK" value="<%= dados.IdPessoa_FK %> ">    
+ </div>   
+  <div class="form-group">     
+ <label>IdProcedimento_FK</label>    
+ <input type="text" class="form-control form-control-sm" name="IdProcedimento_FK" value="<%= dados.IdProcedimento_FK %> ">    
+ </div>   
+ <!-- dados da tabela detalhes-->  
+ <div class="card-header">     
+ <ul class="nav nav-pills w-100">     
+ <li class="nav-pill active">     
+ <h4>Editar registro de detalhe</h4>     
+ </li>     
+ </ul>     
+ </div>    
+ <div class="form-group">   
+ <label>Letra</label>    
+ <input class="form-control" type="text" name="Letra" value="<%= dados.Letra %>" />   
+ </div>   
+ <div class="form-group">   
+ <label>DescricaoResposta</label>    
+ <input class="form-control" type="text" name="DescricaoResposta" value="<%= dados.DescricaoResposta %>" />   
+ </div>   
+ <div class="form-group">     
+ <input type="submit" class="btn btn-info" value="Editar"/>  
+ <a href="/" class="btn btn-outline-primary btn-sm">Voltar</a>     
+ </div>     
+ </form>   
+ <footer>  
+ <p>&copy; 2020 </p>  
+ </footer>  
+ </div>  
+ </div>  
+ </body>     
+ </html>  

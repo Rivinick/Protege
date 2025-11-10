@@ -1,0 +1,47 @@
+<%- include("./head.ejs"); %>
+     <body>  
+ <div class="table-responsive-sm">  
+ <table class="table table-striped table-sm"> 
+ <thead> 
+ <tr> 
+  <th> IdQuestao </th> 
+  <th> Descricao </th> 
+  <th> Resposta_correta </th> 
+  <th> IdPessoa_FK </th> 
+  <th> IdProcedimento_FK </th> 
+  <th> IdResposta </th> 
+  <th> Letra </th> 
+  <th> DescricaoResposta </th> 
+ <th class="d-print-none">  
+ <a class="btn btn-sm btn-success" href="/inserirM">Cadastra novo registro</a>  
+ </th>  
+ </tr>  
+ </thead>  
+ <tbody>  
+ <% for (const mestre of dados) { %>      
+ <tr>  
+  <th> <%= mestre.IdQuestao %> </th> 
+  <th> <%= mestre.Descricao %> </th> 
+  <th> <%= mestre.Resposta_correta %> </th> 
+  <th> <%= mestre.IdPessoa_FK %> </th> 
+  <th> <%= mestre.IdProcedimento_FK %> </th> 
+  <th> <%= mestre.IdResposta %> </th> 
+  <th> <%= mestre.Letra %> </th> 
+  <th> <%= mestre.DescricaoResposta %> </th> 
+ <td class="d-print-none">  
+ <a class="btn btn-sm btn-info" href="/inserirD/<%= mestre.IdQuestao %>/<%= mestre.IdResposta %>">Inclui</a>  
+ <a class="btn btn-sm btn-warning" href="/editar/<%= mestre.IdQuestao %>/<%= mestre.IdResposta %>">Edita</a>  
+ <a class="btn btn-sm btn-danger" href="/delete/<%= mestre.IdQuestao %>/<%= mestre.IdResposta %>">Deleta</a>  
+ </td>  
+ </tr>  
+ <%} %>  
+ </tbody>  
+ </table>  
+ </div>  
+ </div>  
+ </div>  
+ </body>  
+ <footer>  
+ <p>&copy; 2020 </p>  
+ </footer>  
+ </html> 

@@ -1,0 +1,95 @@
+/* --- CORES E FUNDO --- */
+body {
+    background-color: #f5f5f5; /* Cinza claro igual ao fundo do login/home */
+    font-family: Arial, sans-serif;
+}
+
+/* --- CARTÕES E CONTAINERS --- */
+/* Transforma os containers brancos em "cartões" do estilo Protege */
+.container, .jumbotron, .card {
+    background-color: #ffffff;
+    border-radius: 10px;      /* Cantos arredondados */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra suave */
+    border: none;             /* Remove bordas padrão feias */
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Ajuste para o Jumbotron não ficar gigante dentro do container */
+.jumbotron {
+    padding: 2rem 2rem;
+    margin-bottom: 0;
+}
+
+/* --- TÍTULOS E TEXTOS --- */
+h1, h2, h3, h4, h5 {
+    color: #d32f2f; /* Vermelho escuro do Protege */
+    font-weight: bold;
+}
+
+/* --- TABELAS (Lista de Questões) --- */
+.table thead th {
+    background-color: #d32f2f; /* Cabeçalho da tabela vermelho */
+    color: #ffffff;
+    border-color: #b71c1c;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(211, 47, 47, 0.05); /* Linhas alternadas com um vermelho bem suave */
+}
+
+/* --- BOTÕES --- */
+/* Botão Principal (Inserir/Salvar) - Vermelho */
+.btn-primary, .btn-success {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+    font-weight: bold;
+}
+.btn-primary:hover, .btn-success:hover {
+    background-color: #b71c1c; /* Vermelho mais escuro ao passar o mouse */
+    border-color: #b71c1c;
+}
+
+/* Botão de Editar (Amarelo/Laranja) */
+.btn-warning {
+    color: #fff;
+    background-color: #f57c00;
+    border-color: #f57c00;
+    font-weight: bold;
+}
+
+/* Botão de Deletar (Vermelho) */
+.btn-danger {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+    font-weight: bold;
+}
+
+/* Botão "Inclui" detalhe (Azul) */
+.btn-info {
+    background-color: #0288d1;
+    border-color: #0277bd;
+    font-weight: bold;
+    color: white;
+}
+
+/* Botão "Voltar" (Outline) */
+.btn-outline-primary {
+    color: #d32f2f;
+    border-color: #d32f2f;
+    font-weight: bold;
+}
+.btn-outline-primary:hover {
+    background-color: #d32f2f;
+    color: #ffffff;
+}
+
+/* --- FORMULÁRIOS --- */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.form-control:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25); /* Brilho vermelho ao clicar no campo */
+}
