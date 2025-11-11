@@ -4,7 +4,7 @@
   --main-red: #D90D1E;
   --main-green: #038C8C;
   --light: #F2F2F2;
-  --card-width: 273px; /* Largura padrão dos elementos */
+  --card-width: 273px;
 }
 
 /* Reset / baseline */
@@ -25,7 +25,7 @@ body {
 
 /* Container fixo (protótipo mobile) */
 .emergency-container {
-  position: relative; /* Base para o posicionamento absoluto */
+  position: relative;
   width: 320px;
   height: 568px;
   background: var(--light);
@@ -39,7 +39,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: absolute; /* POSICIONAMENTO RESTAURADO */
+  position: absolute;
   width: 100%;
   padding: 29px 24px 0 24px;
   top: 0;
@@ -48,37 +48,31 @@ body {
 .navbar .logo {
   font-weight: 700;
   font-size: 20px;
-  line-height: 27px;
   color: var(--main-red);
   text-decoration: none;
 }
 .navbar .logout {
   font-weight: 700;
   font-size: 14px;
-  line-height: 19px;
   color: var(--main-green);
   text-decoration: none;
 }
 
-
-/* BARRA DE PESQUISA CORRIGIDA */
+/* BARRA DE PESQUISA (Do seu original, com a correção de ícone) */
 .search-wrap {
-  position: absolute; /* POSICIONAMENTO RESTAURADO */
+  position: absolute;
   width: var(--card-width);
   left: calc(50% - var(--card-width)/2);
   top: 138px;
-  
   display: flex;
   align-items: center;
   border: 2px solid var(--main-green); 
   border-radius: 6px;
   background-color: #ffffff;
-  
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23038C8C' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: calc(100% - 12px) center; 
 }
-
 .search-wrap input[type="search"]{
   width: 100%;
   padding: 10px 12px; 
@@ -86,7 +80,7 @@ body {
   background: transparent; 
   box-shadow: none; 
   border-radius: 6px; 
-  font-size: 14px; /* Aumentado */
+  font-size: 14px;
   color: #222;
   padding-right: 40px; 
   outline: none;
@@ -94,35 +88,36 @@ body {
 .search-wrap input[type="search"]::-webkit-search-cancel-button {
   display: none;
 }
-.search-wrap input[type="search"]:focus {
-  background-color: #f7f7f7;
-}
 
-/* LISTA DE SERVIÇOS E CARDS CORRIGIDOS */
+/* LISTA DE HOSPITAIS */
 .emergency-section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-  position: absolute; /* POSICIONAMENTO RESTAURADO */
+  position: absolute;
   width: var(--card-width);
   left: calc(50% - var(--card-width)/2);
-  top: 186px; /* Espaçamento correto */
-  bottom: 20px; /* Define a altura máxima */
+  top: 186px;
+  bottom: 20px;
   padding-bottom: 8px;
   overflow-y: auto;
 }
-
 /* Scrollbar */
 .emergency-section::-webkit-scrollbar { width: 6px; }
 .emergency-section::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
 
-/* O Card Vermelho (Container Principal) */
+
+/*
+ * =================================================================
+ * NOVO CSS DO CARD (Substitui .card-left, .card-right, etc.)
+ * =================================================================
+*/
+
 .card-service {
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 80px;
   background: var(--main-red);
   box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
   border-radius: 10px;
@@ -130,64 +125,60 @@ body {
   color: var(--light);
   cursor: pointer;
 }
-.card-service:hover {
-  transform: translateY(-4px);
-  transition: transform 150ms ease;
-}
 
-/* O Bloco de Conteúdo (agrupa todo o texto) */
 .card-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   min-width: 0;
 }
 
-/* Linha de Cima (Título) */
-.card-top-row {
-  width: 100%;
-  border-bottom: 1px solid var(--light); /* Linha branca */
-}
+/* O título do hospital */
 .card-title {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.3;
   color: var(--light);
-  margin: 0;
+  margin: 0 0 10px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--light); /* Linha branca horizontal */
   white-space: normal;
-  padding-bottom: 5px; /* Espaço para a linha */
 }
 
-/* Linha de Baixo (Telefone/Endereço + Distância) */
-.card-bottom-row {
+/* A linha de informação (Telefone ou Distância) */
+.card-info-line {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: space-between; /* Joga o ícone/texto para a esquerda e a distância para a direita */
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
   margin-top: 8px;
-  width: 100%;
 }
 
-/* O Telefone ou Endereço (lado esquerdo) */
-.card-phone {
-  flex: 1;
-  min-width: 0;
-  font-weight: 700;
-  font-size: 13px;
-  color: #f0f0f0;
-  line-height: 1.4;
-  padding-right: 10px;
-  white-space: normal;
+/* O grupo do ícone + texto (Telefone) */
+.card-info-group {
+  display: flex;
+  align-items: center;
+  min-width: 0; /* Para o texto quebrar a linha */
 }
 
-/* A Distância (lado direito) */
+/* Estilo para os ícones (i) */
+.card-info-group i {
+  width: 24px;
+  text-align: center;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Estilo para o texto de distância (para ficar na direita) */
 .card-distance {
-  flex-shrink: 0;
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--light);
-  text-align: right;
-  white-space: nowrap;
-  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  white-space: nowrap; /* Impede que "0.5 km" quebre */
+}
+.card-distance i {
+  width: 24px;
+  text-align: center;
+  margin-right: 8px;
+  font-size: 16px;
 }
