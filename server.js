@@ -3,7 +3,9 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const path = require('path');
+const sqlite = require("sqlite3").verbose(); // ADICIONADO: Import do SQLite
 
+// Importação das rotas originais do seu projeto
 const authRoutes = require('./src/routes/authRoutes');
 const ciapRoutes = require('./src/routes/ciapRoutes');
 const emergenciaRoutes = require('./src/routes/emergenciaRoutes');
@@ -11,7 +13,17 @@ const emergenciaRoutes = require('./src/routes/emergenciaRoutes');
 const app = express();
 const port = 3000;
 
-// Session configuration
+// --- CONFIGURAÇÃO DO BANCO DE DADOS SQLITE (ADICIONADO) ---
+// Tenta conectar ao arquivo BD_questionario.db na raiz do projeto
+const db = new sqlite.Database("./BD_questionario.db", (err) => {
+    if (err) {
+        console.error('ERRO: Não foi possível conectar ao banco SQLite. Verifique se o arquivo BD_questionario.db está na raiz do projeto.', err.message);
+    } else {
+        console.log('Conectado com sucesso ao banco de dados SQLite.');
+    }
+});
+
+// --- CONFIGURAÇÕES ORIGINAIS DO SEU PROJETO ---
 app.use(session({
     secret: 'protege-plus-secret',
     resave: false,
@@ -19,7 +31,6 @@ app.use(session({
     cookie: {secure: process.env.NODE_ENV === 'production'}
 }));
 
-// Improved error reporting for uncaught exceptions/rejections
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err && err.stack ? err.stack : err);
 });
@@ -28,26 +39,24 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-// Configuração do EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('layout', 'layout');
 app.use(expressLayouts);
 
-// Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-// Mount API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/ciap', ciapRoutes);
 app.use('/api/emergencia', emergenciaRoutes);
 
 
-// --- ROTAS PRINCIPAIS ---
+// ==================================================================
+// ROTAS ORIGINAIS (LOGIN, HOME, SINTOMAS, ETC.)
+// ==================================================================
 
-// Make the home screen the first screen when accessing the site
 app.get('/', (req, res) => {
     res.render('home', {layout: false});
 });
@@ -56,7 +65,6 @@ app.get('/login', (req, res) => {
     res.render('login', {layout: false});
 });
 
-// Login -> redireciona para Home
 app.post('/login', (req, res) => {
     console.log('Tentativa de Login:', req.body);
     res.redirect('/home');
@@ -66,7 +74,6 @@ app.get('/cadastro', (req, res) => {
     res.render('cadastro', {layout: false});
 });
 
-// Após cadastro, redireciona para a home
 app.post('/cadastro', (req, res) => {
     console.log('Novos dados de Cadastro:', req.body);
     res.redirect('/home');
@@ -90,9 +97,7 @@ app.get('/sintomas', (req, res) => {
     res.render('sintomas', { layout: false });
 });
 
-// Sintomas sub-pages
 app.get('/sintomas/queixas', (req, res) => {
-    // Render dedicated queixas view (symptom checklist + verify)
     res.render('queixas', { layout: false });
 });
 
@@ -104,13 +109,16 @@ app.get('/sintomas/diagnosticos', (req, res) => {
     res.render('diagnosticos', { layout: false });
 });
 
-// Detalhes de um item CIAP (página de detalhe)
 app.get('/sintomas/detalhes/:codigo', (req, res) => {
     const codigo = req.params.codigo;
     res.render('detalhe_ciap', { layout: false, codigo });
 });
 
-// --- ADIÇÃO 2: Rotas do Novo Formulário de Exemplo ---
+
+// ==================================================================
+// NOVAS ROTAS: CRUD DE QUESTIONÁRIO (SQLITE)
+// (Adicionadas para funcionar com o banco de dados)
+// ==================================================================
 
 // 1. LISTAR (Read)
 app.get("/questoes", function (req, res) {
@@ -182,7 +190,6 @@ app.post("/editar/:id_m/:id_d", function (req, res) {
 });
 
 // 5. DELETAR (Delete)
-// Deletar apenas uma resposta
 app.get("/delete/:id_m/:id_d", function (req, res) {
     const sql = "SELECT * FROM questao_questionario, resposta_questionario WHERE (IdQuestao=IdQuestao_FK) and (IdQuestao =?) and (IdResposta =?)";
     db.get(sql, [req.params.id_m, req.params.id_d], function (err, row) {
@@ -196,7 +203,8 @@ app.post("/delete/:id_d", function (req, res) {
         res.redirect("/questoes");
     });
 });
-// Deletar Questão inteira (Mestre + Detalhes)
+
+// 6. DELETAR TUDO (Mestre e detalhes)
 app.get("/deletaTodos/:id_m", function (req, res) {
     db.run("DELETE FROM resposta_questionario WHERE IdQuestao_FK = ?", req.params.id_m, (err) => {
          if (err) console.error(err.message);
@@ -207,7 +215,9 @@ app.get("/deletaTodos/:id_m", function (req, res) {
     });
 });
 
-// --- INICIAR SERVIDOR ---
+// ==================================================================
+// INICIALIZAÇÃO DO SERVIDOR
+// ==================================================================
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`--- SERVIDOR PROTEGE ATIVO na porta ${port} ---`);
 });
