@@ -219,5 +219,5 @@ app.get("/deletaTodos/:id_m", function (req, res) {
 // INICIALIZAÇÃO DO SERVIDOR
 // ==================================================================
 app.listen(port, () => {
-    console.log(`--- SERVIDOR PROTEGE ATIVO na porta ${port} ---`);
+    console.log(`Servidor rodando em http://localhost:${port}`);
 });
