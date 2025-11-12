@@ -73,24 +73,31 @@
           const hospitalTelefone = hospital.telefone || '—';
           const hospitalDistancia = hospital.distancia || '—';
 
-          // --- ✨ MUDANÇA AQUI: Lógica do Telefone Clicável ✨ ---
-          let telefoneHtml = '';
-          // Verifica se o texto do telefone começa com '(' ou (após limpar espaços) é um número.
-          // Isso evita transformar 'Avenida...' em link.
-          const isPhone = /^\s*\(?\d/.test(hospitalTelefone);
+          // --- ✨ MUDANÇA AQUI: Lógica de Link Duplo ✨ ---
+          let infoHtml = '';
+          const isPhone = /^\s*\(?\d/.test(hospitalTelefone); // Verifica se é um telefone
           
           if (isPhone) {
-            // É um telefone, cria um link <a>
-            const telLink = hospitalTelefone.replace(/[^0-9+]/g, ''); // Limpa para o href
-            telefoneHtml = `
-              <a href="tel:${telLink}" class="card-info-group card-phone-link">
+            // É um telefone, cria um link <a> de LIGAÇÃO
+            const telLink = hospitalTelefone.replace(/[^0-9+]/g, ''); 
+            infoHtml = `
+              <a href="tel:${telLink}" class="card-info-group card-phone-link" title="Ligar para ${hospitalTelefone}">
                 <i class="fas fa-phone"></i>
                 <span>${hospitalTelefone}</span>
               </a>
             `;
+          } else if (hospitalTelefone !== '—') {
+            // É um endereço, cria um link <a> de MAPA
+            const encodedAddress = encodeURIComponent(hospitalTelefone);
+            infoHtml = `
+              <a href="https://www.google.com/maps/search/?api=1&query=${encodedAddress}" target="_blank" class="card-info-group card-phone-link" title="Ver endereço no mapa">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>${hospitalTelefone}</span>
+              </a>
+            `;
           } else {
-            // É um endereço ou '—', cria um <div> normal
-            telefoneHtml = `
+            // É '—', cria um <div> normal (sem link)
+            infoHtml = `
               <div class="card-info-group">
                 <i class="fas fa-phone"></i>
                 <span>${hospitalTelefone}</span>
@@ -105,7 +112,7 @@
               <div class="card-title">${hospitalNome}</div>
               
               <div class="card-info-line">
-                ${telefoneHtml} <div class="card-distance">
+                ${infoHtml} <div class="card-distance">
                   <i class="fas fa-map-marker-alt"></i>
                   <span>${hospitalDistancia}</span>
                 </div>
@@ -127,7 +134,6 @@
         const query = searchInput.value.trim().toLowerCase();
         allCards.forEach(card => {
           const title = card.querySelector('.card-title').textContent.toLowerCase();
-          // Atualiza o seletor para pegar o span de dentro do <a> ou <div>
           const phoneSpan = card.querySelector('.card-info-group span');
           const phone = phoneSpan ? phoneSpan.textContent.toLowerCase() : '';
           
