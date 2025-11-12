@@ -55,7 +55,6 @@
 
     async function fetchHospitais(latitude, longitude) {
       try {
-        // (Ajuste o raio aqui se necessário, ex: radius=15000)
         const response = await fetch(`/api/emergencia/proximos?lat=${latitude}&lon=${longitude}`);
         const hospitais = await response.json(); 
 
@@ -70,20 +69,45 @@
           const art = document.createElement('article');
           art.className = 'card-service';
           
-          // --- ESTE É O NOVO HTML QUE CORRESPONDE AO PROTÓTIPO ---
+          const hospitalNome = hospital.nome || 'Serviço';
+          const hospitalTelefone = hospital.telefone || '—';
+          const hospitalDistancia = hospital.distancia || '—';
+
+          // --- ✨ MUDANÇA AQUI: Lógica do Telefone Clicável ✨ ---
+          let telefoneHtml = '';
+          // Verifica se o texto do telefone começa com '(' ou (após limpar espaços) é um número.
+          // Isso evita transformar 'Avenida...' em link.
+          const isPhone = /^\s*\(?\d/.test(hospitalTelefone);
+          
+          if (isPhone) {
+            // É um telefone, cria um link <a>
+            const telLink = hospitalTelefone.replace(/[^0-9+]/g, ''); // Limpa para o href
+            telefoneHtml = `
+              <a href="tel:${telLink}" class="card-info-group card-phone-link">
+                <i class="fas fa-phone"></i>
+                <span>${hospitalTelefone}</span>
+              </a>
+            `;
+          } else {
+            // É um endereço ou '—', cria um <div> normal
+            telefoneHtml = `
+              <div class="card-info-group">
+                <i class="fas fa-phone"></i>
+                <span>${hospitalTelefone}</span>
+              </div>
+            `;
+          }
+          // --- Fim da Lógica ---
+
+          // Monta o HTML final
           art.innerHTML = `
             <div class="card-content">
-              <div class="card-title">${hospital.nome || 'Serviço'}</div>
+              <div class="card-title">${hospitalNome}</div>
               
               <div class="card-info-line">
-                <div class="card-info-group">
-                  <i class="fas fa-phone"></i>
-                  <span>${hospital.telefone || '—'}</span>
-                </div>
-                
-                <div class="card-distance">
+                ${telefoneHtml} <div class="card-distance">
                   <i class="fas fa-map-marker-alt"></i>
-                  <span>${hospital.distancia || '—'}</span>
+                  <span>${hospitalDistancia}</span>
                 </div>
               </div>
             </div>`;
@@ -103,7 +127,10 @@
         const query = searchInput.value.trim().toLowerCase();
         allCards.forEach(card => {
           const title = card.querySelector('.card-title').textContent.toLowerCase();
-          const phone = card.querySelector('.card-info-group span').textContent.toLowerCase();
+          // Atualiza o seletor para pegar o span de dentro do <a> ou <div>
+          const phoneSpan = card.querySelector('.card-info-group span');
+          const phone = phoneSpan ? phoneSpan.textContent.toLowerCase() : '';
+          
           const isMatch = title.includes(query) || phone.includes(query);
           card.style.display = isMatch ? 'flex' : 'none';
         });

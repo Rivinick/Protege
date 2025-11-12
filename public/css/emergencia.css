@@ -58,7 +58,7 @@ body {
   text-decoration: none;
 }
 
-/* BARRA DE PESQUISA (Do seu original, com a correção de ícone) */
+/* BARRA DE PESQUISA */
 .search-wrap {
   position: absolute;
   width: var(--card-width);
@@ -107,13 +107,7 @@ body {
 .emergency-section::-webkit-scrollbar { width: 6px; }
 .emergency-section::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
 
-
-/*
- * =================================================================
- * NOVO CSS DO CARD (Substitui .card-left, .card-right, etc.)
- * =================================================================
-*/
-
+/* CSS DO CARD */
 .card-service {
   display: flex;
   align-items: center;
@@ -123,7 +117,6 @@ body {
   border-radius: 10px;
   padding: 16px;
   color: var(--light);
-  cursor: pointer;
 }
 
 .card-content {
@@ -133,7 +126,6 @@ body {
   min-width: 0;
 }
 
-/* O título do hospital */
 .card-title {
   font-weight: 700;
   font-size: 16px;
@@ -141,40 +133,48 @@ body {
   color: var(--light);
   margin: 0 0 10px 0;
   padding-bottom: 10px;
-  border-bottom: 2px solid var(--light); /* Linha branca horizontal */
+  border-bottom: 2px solid var(--light);
   white-space: normal;
 }
 
-/* A linha de informação (Telefone ou Distância) */
 .card-info-line {
   display: flex;
-  justify-content: space-between; /* Joga o ícone/texto para a esquerda e a distância para a direita */
+  justify-content: space-between;
   align-items: center;
   font-weight: 700;
   font-size: 14px;
   margin-top: 8px;
 }
 
-/* O grupo do ícone + texto (Telefone) */
 .card-info-group {
   display: flex;
   align-items: center;
-  min-width: 0; /* Para o texto quebrar a linha */
+  min-width: 0;
 }
 
-/* Estilo para os ícones (i) */
-.card-info-group i {
+
+.card-phone-link {
+  text-decoration: none;
+  color: var(--light); /* Mantém a cor branca */
+  cursor: pointer;
+}
+.card-phone-link:hover {
+  opacity: 0.8; /* Efeito de clique sutil */
+}
+
+
+.card-info-group i,
+.card-distance i {
   width: 24px;
   text-align: center;
   margin-right: 8px;
   font-size: 16px;
 }
 
-/* Estilo para o texto de distância (para ficar na direita) */
 .card-distance {
   display: flex;
   align-items: center;
-  white-space: nowrap; /* Impede que "0.5 km" quebre */
+  white-space: nowrap;
 }
 .card-distance i {
   width: 24px;
