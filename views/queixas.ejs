@@ -4,27 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sintomas e Queixas - Protege+</title>
-  <link rel="stylesheet" href="/css/sintomas.css" />
+  <link rel="stylesheet" href="/css/queixas.css"/>
+  <link rel="icon" href="/logo.png" type="image/png">
   <script src="/js/api.js"></script>
 </head>
 <body>
-  <div class="symptom-container">
-    <h1 class="app-title">Sintomas e Queixas</h1>
-    <div class="logout-area" onclick="logout()"><span class="logout-text">Logout</span></div>
+  <div class="sintoma-container">
+    <%- include('./partials/navbar'); %>
+
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Pesquisar" />
+    </div>
 
     <!-- Lista dinâmica de sintomas -->
-    <section class="symptom-section" id="symptom-section">
+    <section class="sintomas-section" id="symptom-section">
       <div id="symptom-list">Carregando sintomas...</div>
     </section>
 
-    <div style="margin:16px 0; display:flex; gap:12px;">
-      <button id="verifyBtn" class="btn-next">Verificar sintomas</button>
+    <!-- Controles de paginação -->
+    <div class="pagination-controls" id="pagination-controls" style="display: none;">
+      <button id="prevBtn" class="pagination-btn">Anterior</button>
+      <span class="pagination-info" id="pagination-info"></span>
+      <button id="nextBtn" class="pagination-btn">Próxima</button>
     </div>
 
-    <section id="results" style="margin-top:16px"></section>
+    <div class="btn-section">
+      <button id="verifyBtn" class="btn-next">Verificar sintomas</button>
+      <button id="clearBtn" class="btn-clear">Limpar seleções</button>
+    </div>
+
+    <section class="resultado-section" id="results"></section>
   </div>
 
   <script>
+    // Configuração de paginação
+    const ITEMS_PER_PAGE = 20;
+    let allSintomasData = []; // Dados originais
+    let filteredSintomas = []; // Dados após filtro de pesquisa
+    let currentPage = 1;
+    let checkedItems = new Set(); // Armazena códigos dos itens marcados
+
+    // Carrega sintomas da API
     async function loadSintomas() {
       const out = document.getElementById('symptom-list');
       out.innerHTML = 'Carregando...';
@@ -38,21 +58,153 @@
         out.innerHTML = '<div>Nenhum sintoma encontrado</div>';
         return;
       }
+      
+      allSintomasData = sintomas;
+      filteredSintomas = sintomas;
+      currentPage = 1;
+      renderPage();
+    }
+
+    // Renderiza apenas os itens da página atual
+    function renderPage() {
+      const out = document.getElementById('symptom-list');
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      const pageItems = filteredSintomas.slice(startIndex, endIndex);
+
       out.innerHTML = '';
-      sintomas.forEach(item => {
+      
+      if (pageItems.length === 0) {
+        out.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum sintoma encontrado</div>';
+        document.getElementById('pagination-controls').style.display = 'none';
+        return;
+      }
+
+      pageItems.forEach(item => {
         const id = 's_' + item.codigo + '_' + Math.random().toString(36).slice(2,7);
         const wrapper = document.createElement('div');
         wrapper.className = 'symptom-item';
-        wrapper.innerHTML = `<label><input type="checkbox" data-codigo="${item.codigo}" id="${id}"> ${item.nome} <small>(${item.codigo})</small></label>`;
+        const isChecked = checkedItems.has(item.codigo);
+        wrapper.innerHTML = `<label><input type="checkbox" data-codigo="${item.codigo}" id="${id}" ${isChecked ? 'checked' : ''}> ${item.nome} <small>(${item.codigo})</small></label>`;
         out.appendChild(wrapper);
+      });
+
+      // Atualiza controles de paginação
+      updatePagination();
+      
+      // Adiciona listeners aos checkboxes
+      attachCheckboxListeners();
+    }
+
+    // Atualiza controles de paginação
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredSintomas.length / ITEMS_PER_PAGE);
+      const paginationControls = document.getElementById('pagination-controls');
+      const paginationInfo = document.getElementById('pagination-info');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (totalPages <= 1) {
+        paginationControls.style.display = 'none';
+        return;
+      }
+
+      paginationControls.style.display = 'flex';
+      paginationInfo.innerHTML = `Página ${currentPage} de ${totalPages}<br>(${filteredSintomas.length} itens)`;
+      
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+    }
+
+    // Adiciona listeners aos checkboxes
+    function attachCheckboxListeners() {
+      const checkboxes = document.querySelectorAll('#symptom-list input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          const codigo = e.target.dataset.codigo;
+          if (e.target.checked) {
+            checkedItems.add(codigo);
+          } else {
+            checkedItems.delete(codigo);
+          }
+        });
+      });
+    }
+
+    // Normaliza string removendo acentos
+    function normalizeString(str) {
+      return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+    }
+
+    // Função de pesquisa com paginação
+    function setupSearchFilter() {
+      const searchInput = document.getElementById('search');
+      if (!searchInput) return;
+      
+      searchInput.addEventListener('input', () => {
+        const query = normalizeString(searchInput.value.trim());
+        
+        if (query === '') {
+          filteredSintomas = allSintomasData;
+        } else {
+          filteredSintomas = allSintomasData.filter(item => {
+            const nome = normalizeString(item.nome || '');
+            const codigo = normalizeString(item.codigo || '');
+            return nome.includes(query) || codigo.includes(query);
+          });
+        }
+        
+        currentPage = 1; // Volta para primeira página ao pesquisar
+        renderPage();
+      });
+    }
+
+    // Navegação de páginas
+    function setupPagination() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage();
+          // Scroll para o topo da lista
+          document.getElementById('symptom-section').scrollTop = 0;
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredSintomas.length / ITEMS_PER_PAGE);
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPage();
+          // Scroll para o topo da lista
+          document.getElementById('symptom-section').scrollTop = 0;
+        }
+      });
+    }
+
+    // Limpa todas as seleções
+    function clearAllSelections() {
+      checkedItems.clear();
+      // Atualiza os checkboxes visíveis na página atual
+      const checkboxes = document.querySelectorAll('#symptom-list input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
       });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       const verifyBtn = document.getElementById('verifyBtn');
       verifyBtn.addEventListener('click', async () => {
-        const checked = Array.from(document.querySelectorAll('#symptom-list input[type=checkbox]:checked'));
-        const codes = checked.map(cb => cb.dataset.codigo);
+        const codes = Array.from(checkedItems);
+        if (codes.length === 0) {
+          alert('Por favor, selecione pelo menos um sintoma.');
+          return;
+        }
         const resEl = document.getElementById('results');
         resEl.innerHTML = 'Buscando enfermidades...';
         const resp = await verificarSintomas(codes);
@@ -68,7 +220,14 @@
         resEl.innerHTML = '<ul>' + items.map(i => `<li><strong>${i.codigo}</strong> - ${i.nome || ''} (Grupo ${i.idGrupo})</li>`).join('') + '</ul>'; 
       });
 
+      const clearBtn = document.getElementById('clearBtn');
+      clearBtn.addEventListener('click', () => {
+        clearAllSelections();
+      });
+
       loadSintomas();
+      setupSearchFilter();
+      setupPagination();
     });
   </script>
 </body>
