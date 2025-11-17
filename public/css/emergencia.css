@@ -1,36 +1,32 @@
-/* Emergência */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
 
-:root{
+:root {
   --main-red: #D90D1E;
   --main-green: #038C8C;
   --light: #F2F2F2;
+  --dark: #1E1E1E;
   --card-width: 100%;
 }
 
-/* Reset / baseline */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: 'Nunito Sans', sans-serif;
   background: var(--light);
   min-height: 100vh;
 }
 
-/* Container fixo (protótipo mobile) */
 .emergency-container {
   width: 380px;
   margin: 0 auto;
-  background: var(--light);
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   gap: 20px;
 }
 
@@ -40,25 +36,25 @@ body {
   max-width: 100%;
   display: flex;
   align-items: center;
-  border: 2px solid var(--main-green); 
+  border: 2px solid var(--main-green);
   border-radius: 6px;
   background-color: #ffffff;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23038C8C' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: calc(100% - 12px) center; 
+  background-position: calc(100% - 12px) center;
   flex-shrink: 0;
 }
 
-.search-wrap input[type="search"]{
+.search-wrap input[type="search"] {
   width: 100%;
-  padding: 10px 12px; 
-  border: none; 
-  background: transparent; 
-  box-shadow: none; 
-  border-radius: 6px; 
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 6px;
   font-size: 14px;
   color: #222;
-  padding-right: 40px; 
+  padding-right: 40px;
   outline: none;
 }
 
@@ -76,12 +72,19 @@ body {
   max-width: 100%;
   overflow-y: auto;
   flex: 1;
-  max-height: calc(100vh - 200px);
-  padding-bottom: 20px;
+  max-height: calc(100vh - 150px);
+  border-radius: 8px;
 }
+
 /* Scrollbar */
-.emergency-section::-webkit-scrollbar { width: 6px; }
-.emergency-section::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
+.emergency-section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.emergency-section::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+}
 
 /* CSS DO CARD */
 .card-service {
@@ -130,11 +133,14 @@ body {
 
 .card-phone-link {
   text-decoration: none;
-  color: var(--light); /* Mantém a cor branca */
+  color: var(--light);
+  /* Mantém a cor branca */
   cursor: pointer;
 }
+
 .card-phone-link:hover {
-  opacity: 0.8; /* Efeito de clique sutil */
+  opacity: 0.8;
+  /* Efeito de clique sutil */
 }
 
 
@@ -151,6 +157,7 @@ body {
   align-items: center;
   white-space: nowrap;
 }
+
 .card-distance i {
   width: 24px;
   text-align: center;
