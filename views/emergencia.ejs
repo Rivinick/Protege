@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Serviços de Emergência - Protege+</title>
-  
+
   <link rel="stylesheet" href="/css/emergencia.css" />
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
+
   <link rel="icon" href="/logo.png" type="image/png">
 </head>
+
 <body>
   <div class="emergency-container">
-    
+
     <%- include('./partials/navbar'); %>
 
-    <div class="search-wrap">
-      <input id="search" type="search" placeholder="Pesquisar" />
-    </div>
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Pesquisar" />
+      </div>
 
-    <section class="emergency-section" id="services-list">
-      </section>
+      <section class="emergency-section" id="services-list"></section>
   </div>
 
   <script>
@@ -36,7 +37,7 @@
 
     function getGeolocation() {
       if ('geolocation' in navigator) {
-        listContainer.innerHTML = '<p style="color: white; text-align: center; padding-top: 20px;">Obtendo sua localização...</p>';
+        listContainer.innerHTML = '<div class="loader"></div>';
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const lat = position.coords.latitude;
@@ -56,19 +57,19 @@
     async function fetchHospitais(latitude, longitude) {
       try {
         const response = await fetch(`/api/emergencia/proximos?lat=${latitude}&lon=${longitude}`);
-        const hospitais = await response.json(); 
+        const hospitais = await response.json();
 
-        listContainer.innerHTML = ''; 
-        
+        listContainer.innerHTML = '';
+
         if (!hospitais || hospitais.length === 0) {
-           listContainer.innerHTML = '<p style="color: #D90D1E; text-align: center; padding-top: 20px; font-weight: bold;">Nenhum hospital encontrado no raio de 15km.</p>';
-           return;
+          listContainer.innerHTML = '<p style="color: #D90D1E; text-align: center; padding-top: 20px; font-weight: bold;">Nenhum hospital encontrado no raio de 15km.</p>';
+          return;
         }
 
         hospitais.forEach(hospital => {
           const art = document.createElement('article');
           art.className = 'card-service';
-          
+
           const hospitalNome = hospital.nome || 'Serviço';
           const hospitalTelefone = hospital.telefone || '—';
           const hospitalDistancia = hospital.distancia || '—';
@@ -76,10 +77,10 @@
           // --- ✨ MUDANÇA AQUI: Lógica de Link Duplo ✨ ---
           let infoHtml = '';
           const isPhone = /^\s*\(?\d/.test(hospitalTelefone); // Verifica se é um telefone
-          
+
           if (isPhone) {
             // É um telefone, cria um link <a> de LIGAÇÃO
-            const telLink = hospitalTelefone.replace(/[^0-9+]/g, ''); 
+            const telLink = hospitalTelefone.replace(/[^0-9+]/g, '');
             infoHtml = `
               <a href="tel:${telLink}" class="card-info-group card-phone-link" title="Ligar para ${hospitalTelefone}">
                 <i class="fas fa-phone"></i>
@@ -136,7 +137,7 @@
           const title = card.querySelector('.card-title').textContent.toLowerCase();
           const phoneSpan = card.querySelector('.card-info-group span');
           const phone = phoneSpan ? phoneSpan.textContent.toLowerCase() : '';
-          
+
           const isMatch = title.includes(query) || phone.includes(query);
           card.style.display = isMatch ? 'flex' : 'none';
         });
@@ -144,4 +145,5 @@
     }
   </script>
 </body>
+
 </html>

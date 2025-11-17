@@ -30,7 +30,6 @@ body {
   gap: 20px;
 }
 
-/* BARRA DE PESQUISA */
 .search-wrap {
   width: var(--card-width);
   max-width: 100%;
@@ -62,11 +61,10 @@ body {
   display: none;
 }
 
-/* LISTA DE HOSPITAIS */
 .emergency-section {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   width: var(--card-width);
   max-width: 100%;
@@ -76,7 +74,6 @@ body {
   border-radius: 8px;
 }
 
-/* Scrollbar */
 .emergency-section::-webkit-scrollbar {
   width: 4px;
 }
@@ -86,7 +83,6 @@ body {
   border-radius: 6px;
 }
 
-/* CSS DO CARD */
 .card-service {
   display: flex;
   align-items: center;
@@ -130,7 +126,6 @@ body {
   min-width: 0;
 }
 
-
 .card-phone-link {
   text-decoration: none;
   color: var(--light);
@@ -140,9 +135,7 @@ body {
 
 .card-phone-link:hover {
   opacity: 0.8;
-  /* Efeito de clique sutil */
 }
-
 
 .card-info-group i,
 .card-distance i {
@@ -163,4 +156,20 @@ body {
   text-align: center;
   margin-right: 8px;
   font-size: 16px;
+}
+
+.loader {
+  margin-top: 250px;
+  width: 120px;
+  height: 20px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle closest-side, #D90D1E 94%, #eee) 50% 50%/calc(50% + 10px) 70% repeat-x #eee;
+  animation: l9 1s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+
+@keyframes l9 {
+  100% {
+    background-position: calc(200% - 5px)
+  }
 }
