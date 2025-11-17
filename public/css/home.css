@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+
 :root {
     --main-red: #D90D1E;
     --main-green: #038C8C;
@@ -6,7 +8,11 @@
     --card-width: 100%;
 }
 
-*{margin: 0; padding: 0; box-sizing: border-box;}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Nunito Sans', sans-serif;
@@ -45,53 +51,22 @@ body {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    gap: 10px;
-
     cursor: pointer;
     transition: transform 0.15s ease;
-}
+    gap:5px;
 
-.button:hover {
-    transform: scale(1.03);
+    &:hover {
+        transform: scale(1.03);
+    }
+
+    svg {
+        width: 60px;
+    }
 }
 
 .button-text {
     font-weight: 700;
     font-size: 13px;
-    line-height: 18px;
     text-align: center;
     color: #F2F2F2;
-}
-
-.icon {
-    background: #F2F2F2;
-    width: 50px;
-    height: 50px;
-}
-
-#sintomas-icon {
-    background-color: transparent;
-    background-image: url('/images/icone-sintomas.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-}
-
-#emergencia-icon {
-    background-color: transparent;
-    background-image: url('/images/icone-servicos.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
-}
-
-#teste-icon {
-    background-color: transparent;
-    background-image: url('/images/icone-teste.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    border: none;
 }
