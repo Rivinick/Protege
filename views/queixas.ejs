@@ -16,17 +16,15 @@
       <input id="search" type="search" placeholder="Pesquisar" />
     </div>
 
-    <!-- Lista dinâmica de sintomas -->
-    <section class="sintomas-section" id="symptom-section">
-      <div id="symptom-list">Carregando sintomas...</div>
-    </section>
+      <section class="sintomas-section" id="symptom-section">
+        <div id="symptom-list">Carregando sintomas...</div>
+      </section>
 
-    <!-- Controles de paginação -->
-    <div class="pagination-controls" id="pagination-controls" style="display: none;">
-      <button id="prevBtn" class="pagination-btn">Anterior</button>
-      <span class="pagination-info" id="pagination-info"></span>
-      <button id="nextBtn" class="pagination-btn">Próxima</button>
-    </div>
+      <div class="pagination-controls" id="pagination-controls" style="display: none;">
+        <button id="prevBtn" class="pagination-btn">Anterior</button>
+        <span class="pagination-info" id="pagination-info"></span>
+        <button id="nextBtn" class="pagination-btn">Próxima</button>
+      </div>
 
     <div class="btn-section">
       <button id="verifyBtn" class="btn-next">Verificar sintomas</button>
@@ -37,14 +35,12 @@
   </div>
 
   <script>
-    // Configuração de paginação
     const ITEMS_PER_PAGE = 20;
-    let allSintomasData = []; // Dados originais
-    let filteredSintomas = []; // Dados após filtro de pesquisa
+    let allSintomasData = [];
+    let filteredSintomas = [];
     let currentPage = 1;
-    let checkedItems = new Set(); // Armazena códigos dos itens marcados
+    let checkedItems = new Set();
 
-    // Carrega sintomas da API
     async function loadSintomas() {
       const out = document.getElementById('symptom-list');
       out.innerHTML = 'Carregando...';
@@ -65,7 +61,6 @@
       renderPage();
     }
 
-    // Renderiza apenas os itens da página atual
     function renderPage() {
       const out = document.getElementById('symptom-list');
       const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -81,7 +76,7 @@
       }
 
       pageItems.forEach(item => {
-        const id = 's_' + item.codigo + '_' + Math.random().toString(36).slice(2,7);
+        const id = 's_' + item.codigo + '_' + Math.random().toString(36).slice(2, 7);
         const wrapper = document.createElement('div');
         wrapper.className = 'symptom-item';
         const isChecked = checkedItems.has(item.codigo);
@@ -89,14 +84,11 @@
         out.appendChild(wrapper);
       });
 
-      // Atualiza controles de paginação
       updatePagination();
-      
-      // Adiciona listeners aos checkboxes
+
       attachCheckboxListeners();
     }
 
-    // Atualiza controles de paginação
     function updatePagination() {
       const totalPages = Math.ceil(filteredSintomas.length / ITEMS_PER_PAGE);
       const paginationControls = document.getElementById('pagination-controls');
@@ -116,7 +108,6 @@
       nextBtn.disabled = currentPage === totalPages;
     }
 
-    // Adiciona listeners aos checkboxes
     function attachCheckboxListeners() {
       const checkboxes = document.querySelectorAll('#symptom-list input[type="checkbox"]');
       checkboxes.forEach(checkbox => {
@@ -131,7 +122,6 @@
       });
     }
 
-    // Normaliza string removendo acentos
     function normalizeString(str) {
       return str
         .normalize('NFD')
@@ -139,7 +129,6 @@
         .toLowerCase();
     }
 
-    // Função de pesquisa com paginação
     function setupSearchFilter() {
       const searchInput = document.getElementById('search');
       if (!searchInput) return;
@@ -156,13 +145,12 @@
             return nome.includes(query) || codigo.includes(query);
           });
         }
-        
-        currentPage = 1; // Volta para primeira página ao pesquisar
+
+        currentPage = 1;
         renderPage();
       });
     }
 
-    // Navegação de páginas
     function setupPagination() {
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
@@ -171,7 +159,6 @@
         if (currentPage > 1) {
           currentPage--;
           renderPage();
-          // Scroll para o topo da lista
           document.getElementById('symptom-section').scrollTop = 0;
         }
       });
@@ -181,16 +168,13 @@
         if (currentPage < totalPages) {
           currentPage++;
           renderPage();
-          // Scroll para o topo da lista
           document.getElementById('symptom-section').scrollTop = 0;
         }
       });
     }
 
-    // Limpa todas as seleções
     function clearAllSelections() {
       checkedItems.clear();
-      // Atualiza os checkboxes visíveis na página atual
       const checkboxes = document.querySelectorAll('#symptom-list input[type="checkbox"]');
       checkboxes.forEach(checkbox => {
         checkbox.checked = false;

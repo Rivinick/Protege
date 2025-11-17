@@ -181,7 +181,7 @@ body {
 .resultado-section{
     width: var(--card-width);
     max-width: 100%;
-    padding: 16px;
+    padding: 10px;
     background: #ffffff;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
@@ -189,14 +189,25 @@ body {
 
 .resultado-section ul {
     list-style: none;
-    padding: 0;
+    padding: 5px;
 }
 
 .resultado-section li {
-    padding: 8px 0;
     border-bottom: 1px solid #f0f0f0;
+    padding: 5px;
+
+    &:hover{
+        background-color: #e25561;
+        color: #fff;
+        border-radius: 8px;
+    }
 }
 
 .resultado-section li:last-child {
     border-bottom: none;
+}
+
+.resultado-section a {
+    text-decoration: none;
+    color: black;
 }
