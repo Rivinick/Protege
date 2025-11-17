@@ -1,106 +1,130 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Detalhe - CIAP</title>
-  <link rel="stylesheet" href="/css/sintomas.css" />
+  <link rel="stylesheet" href="/css/detalhe-ciap.css" />
+  <link rel="icon" href="/assets/logo.png" type="image/png">
   <script src="/js/api.js"></script>
-  <style>
-    .detail-section { margin: 12px 0; }
-    .detail-title { font-weight: 600; margin-bottom: 6px; }
-    .back-link { display:inline-block; margin:8px 0; }
-  </style>
 </head>
+
 <body>
-  <div class="diagnostics-container">
-    <a class="back-link" href="/sintomas/diagnosticos">← Voltar aos Diagnósticos</a>
-    <h1 id="detalhe-title" class="app-title">Carregando...</h1>
-    <div id="detalhe-content">
-      <div>Carregando detalhes...</div>
-    </div>
+  <div class="detalhe-container">
+    <%- include('./partials/navbar'); %>
+
+      <div class="container-header-btn">
+        <button class="btn-header" onclick="location.href='/sintomas/diagnosticos'">📃 Diagnósticos</button>
+        <button class="btn-header" onclick="location.href='/sintomas/queixas'">🩺 Sintomas</button>
+      </div>
+
+      <header class="detalhe-header">
+        <p class="detalhe-subtitle">Detalhes</p>
+        <h2 id="detalhe-title" class="detalhe-title">Carregando...</h2>
+      </header>
+
+      <div id="detalhe-content" class="detalhe-content">
+        <div class="detail-card">
+          <div class="detail-body">Carregando detalhes...</div>
+        </div>
+      </div>
   </div>
 
   <script>
-    // Get codigo from server-rendered variable or from URL as fallback
     const serverCodigo = '<%= typeof codigo !== "undefined" ? codigo : "" %>';
     function readCodigoFromUrl() {
       const parts = location.pathname.split('/');
-      return parts[parts.length -1] || '';
+      return parts[parts.length - 1] || '';
     }
 
     async function renderDetalhe() {
       const codigo = serverCodigo || readCodigoFromUrl();
+
       if (!codigo) {
         document.getElementById('detalhe-content').innerHTML = '<div>Código inválido</div>';
         return;
       }
 
       const resp = await getDetalhesCiap(codigo);
+
       if (!resp.success) {
-        document.getElementById('detalhe-content').innerHTML = '<div>Erro ao carregar detalhes</div>';
+        setContentMessage('Erro ao carregar detalhes');
         return;
       }
 
-  const detalhe = resp.data && resp.data.detalhes;
-  const subSintomas = detalhe && detalhe.subSintomas ? detalhe.subSintomas : [];
+      const detalhe = resp.data && resp.data.detalhes;
+      const subSintomas = detalhe && Array.isArray(detalhe.subSintomas) ? detalhe.subSintomas : [];
+
       if (!detalhe) {
         document.getElementById('detalhe-title').textContent = 'Detalhe não encontrado';
-        document.getElementById('detalhe-content').innerHTML = '<div>Detalhe não encontrado para o código: ' + codigo + '</div>';
+        setContentMessage(`Detalhe não encontrado para o código: ${codigo}`);
         return;
       }
 
       document.getElementById('detalhe-title').textContent = `${detalhe.codigo} — ${detalhe.nomeLeigo || ''}`;
 
-      // Build HTML for optional sections
-      let html = '';
+      const sections = [];
 
-      // Sintomas Associados (subSintomas) - may or may not exist
-      if (Array.isArray(subSintomas) && subSintomas.length > 0) {
-        html += '<div class="detail-section">';
-        html += '<div class="detail-title">Sintomas Associados</div>';
-        html += '<ul>' + subSintomas.map(s => `<li>${s.nome}</li>`).join('') + '</ul>';
-        html += '</div>';
+      if (subSintomas.length > 0) {
+        subSintomas.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
+        
+        sections.push(buildSection('Sintomas Associados', `
+          <ul class="detail-list">
+            ${subSintomas.map(s => `<li>${capitalWord(s.nome)}</li>`).join('')}
+            </ul>
+        `));
       }
 
-      // Sintomas Inclusos
       if (detalhe.sintomasInclusos && detalhe.sintomasInclusos.trim() !== '') {
-        html += '<div class="detail-section">';
-        html += '<div class="detail-title">Sintomas Inclusos</div>';
-        html += `<div>${detalhe.sintomasInclusos}</div>`;
-        html += '</div>';
+        sections.push(buildSection('Sintomas inclusos', `<p>${capitalWord(detalhe.sintomasInclusos)}</p>`));
       }
 
-      // Sintomas de Exclusão
       if (detalhe.sintomasExclusao && detalhe.sintomasExclusao.trim() !== '') {
-        html += '<div class="detail-section">';
-        html += '<div class="detail-title">Sintomas de Exclusão</div>';
-        html += `<div>${detalhe.sintomasExclusao}</div>`;
-        html += '</div>';
+        sections.push(buildSection('Sintomas de exclusão', `<p>${detalhe.sintomasExclusao}</p>`));
       }
 
-      // Outros Sintomas
       if (detalhe.outrosSintomas && detalhe.outrosSintomas.trim() !== '') {
-        html += '<div class="detail-section">';
-        html += '<div class="detail-title">Outros Sintomas</div>';
-        html += `<div>${detalhe.outrosSintomas}</div>`;
-        html += '</div>';
+        sections.push(buildSection('Outros sintomas', `<p>${detalhe.outrosSintomas}</p>`));
       }
 
-      // Possíveis CID-10
       if (detalhe.possiveisCid10 && detalhe.possiveisCid10.trim() !== '') {
-        html += '<div class="detail-section">';
-        html += '<div class="detail-title">Possíveis CID-10</div>';
-        html += `<div>${detalhe.possiveisCid10}</div>`;
-        html += '</div>';
+        sections.push(buildSection('Possíveis CID-10', `<p>${detalhe.possiveisCid10}</p>`));
       }
 
-      if (html === '') html = '<div>Nenhuma informação adicional disponível para este item.</div>';
+      const html = sections.length > 0
+        ? sections.join('')
+        : buildSection('Informações adicionais', '<p>Nenhum detalhe complementar disponível para este item.</p>');
 
       document.getElementById('detalhe-content').innerHTML = html;
     }
 
     document.addEventListener('DOMContentLoaded', renderDetalhe);
+
+    function setContentMessage(message) {
+      document.getElementById('detalhe-content').innerHTML = `
+        <div class="detail-card">
+          <div class="detail-body">${message}</div>
+        </div>`;
+    }
+
+    function buildSection(title, content) {
+      return `
+        <section class="detail-card">
+          <div class="detail-card-header">
+            <h2 class="detail-title">${title}</h2>
+          </div>
+          <div class="detail-body">
+            ${content}
+          </div>
+        </section>
+      `;
+    }
+
+    function capitalWord(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
   </script>
 </body>
+
 </html>
