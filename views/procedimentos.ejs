@@ -1,55 +1,155 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Procedimentos - Protege+</title>
-  <link rel="stylesheet" href="/css/sintomas.css" />
+  <link rel="stylesheet" href="/css/procedimentos.css" />
+  <link rel="icon" href="/assets/logo.png" type="image/png">
   <script src="/js/api.js"></script>
 </head>
-<body>
-  <div class="procedures-container">
-    <h1 class="app-title">Procedimentos Diagnósticos e Preventivos</h1>
-    <div class="logout-area" onclick="logout()"><span class="logout-text">Logout</span></div>
 
-    <div id="items" style="margin-top:16px">Carregando itens...</div>
+<body>
+  <div class="procedimentos-container">
+    <!-- NAVBAR -->
+    <%- include('./partials/navbar'); %>
+
+      <!-- CARD TITULO -->
+      <header class="procedimentos-header">
+        <p class="procedimentos-subtitle">Procedimentos</p>
+        <h2 class="procedimentos-title">Lista de Procedimentos CIAP</h2>
+      </header>
+
+      <!-- CARD LISTA -->
+      <div id="items" class="procedimentos-content">
+        <div class="detail-card">
+          <div class="detail-body">Carregando itens...</div>
+        </div>
+      </div>
   </div>
 
   <script>
-    // Show items for the Procedimentos group directly (prefer id=2)
+    /**
+     * Carrega e exibe a lista de procedimentos CIAP.
+     * Busca o grupo de procedimentos e renderiza os itens em formato de lista estilizada.
+     */
     async function loadProcedimentos() {
       const itemsEl = document.getElementById('items');
-      itemsEl.innerHTML = 'Carregando itens...';
+      itemsEl.innerHTML = `
+        <div class="detail-card">
+          <div class="detail-body">Carregando itens...</div>
+        </div>`;
 
-      // Try to fetch grupos to resolve the correct id if it changed
       const gruposResp = await getGruposCiap();
       if (!gruposResp.success) {
-        itemsEl.innerHTML = '<div>Erro ao carregar grupos</div>';
+        setContentMessage('Erro ao carregar grupos');
         return;
       }
       const grupos = (gruposResp.data && gruposResp.data.grupos) || [];
 
-      // prefer explicit id 2, fallback to name match
       let target = grupos.find(g => g.id === 2) || grupos.find(g => /procedimento/i.test(g.componente));
       if (!target) {
-        itemsEl.innerHTML = '<div>Grupo de Procedimentos não encontrado</div>';
+        setContentMessage('Grupo de Procedimentos não encontrado');
         return;
       }
 
       const resp2 = await getItensCiap(target.id);
       if (!resp2.success) {
-        itemsEl.innerHTML = '<div>Erro ao carregar itens</div>';
+        setContentMessage('Erro ao carregar itens');
         return;
       }
       const items = (resp2.data && resp2.data.itens) || [];
       if (items.length === 0) {
-        itemsEl.innerHTML = '<div>Nenhum item encontrado</div>';
+        setContentMessage('Nenhum item encontrado');
         return;
       }
-      itemsEl.innerHTML = '<ul>' + items.map(i => `<li>${i.codigo} — ${i.nome}</li>`).join('') + '</ul>';
+      // Ordena os itens por nome
+      items.sort((a, b) => {
+        const nomeA = (a.codigo || '');
+        const nomeB = (b.codigo || '');
+        return nomeA.localeCompare(nomeB, 'pt', { sensitivity: 'base' });
+      });
+
+      const ITEMS_INICIAIS = 10;
+      const temMaisItens = items.length > ITEMS_INICIAIS;
+      const itemsIniciais = items.slice(0, ITEMS_INICIAIS);
+      const itemsRestantes = items.slice(ITEMS_INICIAIS);
+
+      const uniqueId = `procedimentos-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+      let html = `
+        <div class="detail-card">
+          <div class="detail-card-header">
+            <h2 class="detail-title">Procedimentos (${items.length})</h2>
+          </div>
+          <div class="detail-body">
+            <ul class="detail-list" id="${uniqueId}-visible">
+              ${itemsIniciais.map(i => `<li>${i.codigo} — ${capitalWord(i.nome)}</li>`).join('')}
+            </ul>
+            ${temMaisItens ? `
+            <ul class="detail-list subsintomas-hidden" id="${uniqueId}-hidden" style="display: none;">
+              ${itemsRestantes.map(i => `<li>${i.codigo} — ${capitalWord(i.nome)}</li>`).join('')}
+            </ul>
+            <button class="btn-ver-mais" onclick="toggleItems('${uniqueId}')" id="${uniqueId}-btn">
+              Ver mais (${itemsRestantes.length} ${itemsRestantes.length === 1 ? 'procedimento' : 'procedimentos'})
+            </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      itemsEl.innerHTML = html;
     }
 
     document.addEventListener('DOMContentLoaded', loadProcedimentos);
+
+    /**
+     * Exibe uma mensagem no elemento de procedimentos da página.
+     * 
+     * @param {string} message - Mensagem a ser exibida
+     */
+     function setContentMessage(message) {
+      document.getElementById('items').innerHTML = `
+        <div class="detail-card">
+          <div class="detail-body">${message}</div>
+        </div>`;
+    }
+
+    /**
+     * Converte a primeira letra de uma string para maiúscula e mantém o restante inalterado.
+     * 
+     * @param {string} string - A string a ser capitalizada.
+     * @returns {string} A string com a primeira letra em maiúscula.
+     */
+    function capitalWord(string) {
+      if (!string) return '';
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    /**
+     * Alterna a visualização entre a lista resumida e completa de procedimentos.
+     * Mostra/oculta os itens adicionais e atualiza o texto do botão.
+     * 
+     * @param {string} uniqueId - ID único da seção de procedimentos
+     */
+    function toggleItems(uniqueId) {
+      const hiddenList = document.getElementById(`${uniqueId}-hidden`);
+      const btn = document.getElementById(`${uniqueId}-btn`);
+
+      if (!hiddenList || !btn) return;
+
+      const isHidden = hiddenList.style.display === 'none' || hiddenList.style.display === '';
+      if (isHidden) {
+        hiddenList.style.display = 'flex';
+        btn.textContent = 'Ver menos';
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        hiddenList.style.display = 'none';
+        btn.textContent = `Ver mais (${hiddenList.children.length} ${hiddenList.children.length === 1 ? 'procedimento' : 'procedimentos'})`;
+      }
+    }
   </script>
 </body>
+
 </html>
