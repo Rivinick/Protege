@@ -1,54 +1,61 @@
 <%- include("./head.ejs"); %>
- <h4>Editar registro de mestre</h4>  
- <form action="/editar/<%= dados.IdQuestao %>/<%= dados.IdResposta %>" method="post">  
-   <div class="form-horizontal">  
-   
- </div>   
-  <div class="form-group">     
- <label>IdQuestao</label>    
- <input type="text" class="form-control form-control-sm" name="IdQuestao" value="<%= dados.IdQuestao %> ">    
- </div>   
-  <div class="form-group">     
- <label>Descricao</label>    
- <input type="text" class="form-control form-control-sm" name="Descricao" value="<%= dados.Descricao %> ">    
- </div>   
-  <div class="form-group">     
- <label>Resposta_correta</label>    
- <input type="text" class="form-control form-control-sm" name="Resposta_correta" value="<%= dados.Resposta_correta %> ">    
- </div>   
-  <div class="form-group">     
- <label>IdPessoa_FK</label>    
- <input type="text" class="form-control form-control-sm" name="IdPessoa_FK" value="<%= dados.IdPessoa_FK %> ">    
- </div>   
-  <div class="form-group">     
- <label>IdProcedimento_FK</label>    
- <input type="text" class="form-control form-control-sm" name="IdProcedimento_FK" value="<%= dados.IdProcedimento_FK %> ">    
- </div>   
- <!-- dados da tabela detalhes-->  
- <div class="card-header">     
- <ul class="nav nav-pills w-100">     
- <li class="nav-pill active">     
- <h4>Editar registro de detalhe</h4>     
- </li>     
- </ul>     
- </div>    
- <div class="form-group">   
- <label>Letra</label>    
- <input class="form-control" type="text" name="Letra" value="<%= dados.Letra %>" />   
- </div>   
- <div class="form-group">   
- <label>DescricaoResposta</label>    
- <input class="form-control" type="text" name="DescricaoResposta" value="<%= dados.DescricaoResposta %>" />   
- </div>   
- <div class="form-group">     
- <input type="submit" class="btn btn-info" value="Editar"/>  
- <a href="/" class="btn btn-outline-primary btn-sm">Voltar</a>     
- </div>     
- </form>   
- <footer>  
- <p>&copy; 2020 </p>  
- </footer>  
- </div>  
- </div>  
- </body>     
- </html>  
+<h4>Editar Pessoa (Mestre)</h4> 
+<form action="/editar/<%= dados.IdPessoa %>/<%= dados.IdTelefone %>" method="post"> 
+    <div class="form-horizontal"> 
+    </div>  
+    <div class="form-group">     
+        <label>IdPessoa (Não pode editar)</label>    
+        <input type="text" class="form-control form-control-sm" name="IdPessoa" value="<%= dados.IdPessoa %>" readonly>    
+    </div>   
+    <div class="form-group">     
+        <label>CPF</label>    
+        <input type="text" class="form-control form-control-sm" name="CPF" value="<%= dados.CPF %>">    
+    </div>   
+    <div class="form-group">     
+        <label>Nome</label>    
+        <input type="text" class="form-control form-control-sm" name="Nome" value="<%= dados.Nome %>">    
+    </div>   
+    <div class="form-group">     
+        <label>Cargo</label>    
+        <input type="text" class="form-control form-control-sm" name="Cargo" value="<%= dados.Cargo %>">    
+    </div>   
+    <div class="form-group">     
+        <label>Empresa</label>    
+        <input type="text" class="form-control form-control-sm" name="Empresa" value="<%= dados.Empresa %>">    
+    </div>
+    <div class="form-group">     
+        <label>Email</label>    
+        <input type="email" class="form-control form-control-sm" name="Email" value="<%= dados.Email %>">    
+    </div>
+    <div class="form-group">     
+        <label>Senha</label>    
+        <input type="password" class="form-control form-control-sm" name="Senha" value="<%= dados.Senha %>">    
+    </div>   
+    
+    <div class="card-header">     
+        <ul class="nav nav-pills w-100">     
+            <li class="nav-pill active">     
+                <h4>Editar Telefone (Detalhe)</h4>     
+            </li>     
+        </ul>     
+    </div>    
+    <div class="form-group">   
+        <label>Numero</label>    
+        <input class="form-control" type="text" name="Numero" value="<%= dados.Numero %>" />   
+    </div>   
+    <div class="form-group">   
+        <label>Unidade da Saude</label>    
+        <input class="form-control" type="text" name="UnidadedaSaude" value="<%= dados.UnidadedaSaude %>" />   
+    </div>   
+    <div class="form-group">     
+        <input type="submit" class="btn btn-info" value="Editar"/>  
+        <a href="/pessoas" class="btn btn-outline-primary btn-sm">Voltar</a>     
+    </div>     
+</form> 
+<footer>  
+    <p>&copy; 2025 </p>  
+</footer>  
+</div>  
+</div>  
+</body>     
+</html>
