@@ -144,9 +144,50 @@ body {
     font-weight: 600;
     cursor: pointer;
 
-    &:hover{
+    &:hover {
         background-color: var(--main-green);
         color: white;
+    }
+}
+
+.subsintomas-hidden {
+    animation: fadeIn 0.3s ease-in;
+    margin-top: 8px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-ver-mais {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: var(--main-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    font-family: 'Nunito Sans', sans-serif;
+
+    &:hover {
+        background-color: #027373;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 }
 

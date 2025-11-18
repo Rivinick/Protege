@@ -12,18 +12,22 @@
 
 <body>
   <div class="detalhe-container">
+    <!-- NAVBAR -->
     <%- include('./partials/navbar'); %>
 
+      <!-- BOTÕES HEADER -->
       <div class="container-header-btn">
         <button class="btn-header" onclick="location.href='/sintomas/diagnosticos'">📃 Diagnósticos</button>
         <button class="btn-header" onclick="location.href='/sintomas/queixas'">🩺 Sintomas</button>
       </div>
 
+      <!-- CARD TITULO -->
       <header class="detalhe-header">
         <p class="detalhe-subtitle">Detalhes</p>
         <h2 id="detalhe-title" class="detalhe-title">Carregando...</h2>
       </header>
 
+      <!-- CARD LISTA -->
       <div id="detalhe-content" class="detalhe-content">
         <div class="detail-card">
           <div class="detail-body">Carregando detalhes...</div>
@@ -33,13 +37,23 @@
 
   <script>
     const serverCodigo = '<%= typeof codigo !== "undefined" ? codigo : "" %>';
-    function readCodigoFromUrl() {
+
+    /**
+     * Lê o código do CIAP a partir da URL da página.
+     *
+     * @returns {string} O código encontrado na URL ou string vazia se não existir
+     */
+    function lerCodigoUrl() {
       const parts = location.pathname.split('/');
       return parts[parts.length - 1] || '';
     }
 
+    /**
+     * Busca e renderiza os detalhes do CIAP na página.
+     * Obtém o código, requisita dados e exibe as seções detalhadas (sintomas, CID-10, etc).
+     */
     async function renderDetalhe() {
-      const codigo = serverCodigo || readCodigoFromUrl();
+      const codigo = serverCodigo || lerCodigoUrl();
 
       if (!codigo) {
         document.getElementById('detalhe-content').innerHTML = '<div>Código inválido</div>';
@@ -68,11 +82,26 @@
 
       if (subSintomas.length > 0) {
         subSintomas.sort((a, b) => a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' }));
-        
+
+        const ITEMS_INICIAIS = 10;
+        const temMaisItens = subSintomas.length > ITEMS_INICIAIS;
+        const itemsIniciais = subSintomas.slice(0, ITEMS_INICIAIS);
+        const itemsRestantes = subSintomas.slice(ITEMS_INICIAIS);
+
+        const uniqueId = `subsintomas-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
         sections.push(buildSection('Sintomas Associados', `
-          <ul class="detail-list">
-            ${subSintomas.map(s => `<li>${capitalWord(s.nome)}</li>`).join('')}
-            </ul>
+          <ul class="detail-list" id="${uniqueId}-visible">
+            ${itemsIniciais.map(s => `<li>${capitalWord(s.nome)}</li>`).join('')}
+          </ul>
+          ${temMaisItens ? `
+          <ul class="detail-list subsintomas-hidden" id="${uniqueId}-hidden" style="display: none;">
+            ${itemsRestantes.map(s => `<li>${capitalWord(s.nome)}</li>`).join('')}
+          </ul>
+          <button class="btn-ver-mais" onclick="toggleSubSintomas('${uniqueId}')" id="${uniqueId}-btn">
+            Ver mais (${itemsRestantes.length} ${itemsRestantes.length === 1 ? 'sintoma' : 'sintomas'})
+          </button>
+          ` : ''}
         `));
       }
 
@@ -101,6 +130,12 @@
 
     document.addEventListener('DOMContentLoaded', renderDetalhe);
 
+    /**
+     * Exibe uma mensagem no elemento de detalhes da página.
+     * Utilizado para avisos (ex: quando não há detalhes encontrados).
+     * 
+     * @param {string} message - Mensagem a ser exibida
+     */
     function setContentMessage(message) {
       document.getElementById('detalhe-content').innerHTML = `
         <div class="detail-card">
@@ -108,6 +143,13 @@
         </div>`;
     }
 
+    /**
+     * Monta um bloco/seção de detalhe HTML padronizada.
+     *
+     * @param {string} title - Título da seção (por exemplo: "Sintomas Associados")
+     * @param {string} content - Conteúdo HTML a ser inserido dentro da seção (pode conter listas, parágrafos, etc)
+     * @returns {string} HTML da seção montada, já pronta para injetar via innerHTML
+     */
     function buildSection(title, content) {
       return `
         <section class="detail-card">
@@ -121,8 +163,37 @@
       `;
     }
 
+    /**
+     * Converte a primeira letra de uma string para maiúscula e mantém o restante inalterado.
+     * 
+     * @param {string} string - A string a ser capitalizada.
+     * @returns {string} A string com a primeira letra em maiúscula.
+     */
     function capitalWord(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    /**
+     * Alterna a visualização entre a lista resumida e completa de subSintomas.
+     * Mostra/oculta os itens adicionais e atualiza o texto do botão.
+     * 
+     * @param {string} uniqueId - ID único da seção de subSintomas
+     */
+    function toggleSubSintomas(uniqueId) {
+      const hiddenList = document.getElementById(`${uniqueId}-hidden`);
+      const btn = document.getElementById(`${uniqueId}-btn`);
+
+      if (!hiddenList || !btn) return;
+
+      const isHidden = hiddenList.style.display === 'none' || hiddenList.style.display === '';
+      if (isHidden) {
+        hiddenList.style.display = 'flex';
+        btn.textContent = 'Ver menos';
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        hiddenList.style.display = 'none';
+        btn.textContent = `Ver mais (${hiddenList.children.length} ${hiddenList.children.length === 1 ? 'sintoma' : 'sintomas'})`;
+      }
     }
   </script>
 </body>
