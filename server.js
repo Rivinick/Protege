@@ -11,7 +11,7 @@ const ciapRoutes = require('./src/routes/ciapRoutes');
 const emergenciaRoutes = require('./src/routes/emergenciaRoutes');
 
 const app = express();
-const port = 3000;
+const port = process.env.APP_PORT;
 
 // --- CONFIGURAÇÃO DO BANCO DE DADOS SQLITE (ADICIONADO) ---
 // Tenta conectar ao arquivo BD_questionario.db na raiz do projeto
@@ -66,7 +66,6 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    console.log('Tentativa de Login:', req.body);
     res.redirect('/home');
 });
 
