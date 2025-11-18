@@ -1,60 +1,56 @@
 <%- include("./head.ejs"); %>
- <h4>Delete um registro mestre/detalhe?</h4>  
- <form action="/delete/<%= dados.IdResposta %>" method="post">  
- <div class="form-horizontal">  
- </div>   
- <div class="form-group">     
-   <label>IdQuestao</label>    
-   <input type="text" class="form-control form-control-sm" name="IdQuestao" value="<%= dados.IdQuestao %>" readonly="readonly" >    
- </div>   
- <div class="form-group">     
-   <label>Descricao</label>    
-   <input type="text" class="form-control form-control-sm" name="Descricao" value="<%= dados.Descricao %>" readonly="readonly" >    
- </div>   
- <div class="form-group">     
-   <label>Resposta_correta</label>    
-   <input type="text" class="form-control form-control-sm" name="Resposta_correta" value="<%= dados.Resposta_correta %>" readonly="readonly" >    
- </div>   
- <div class="form-group">     
-   <label>IdPessoa_FK</label>    
-   <input type="text" class="form-control form-control-sm" name="IdPessoa_FK" value="<%= dados.IdPessoa_FK %>" readonly="readonly" >    
- </div>   
- <div class="form-group">     
-   <label>IdProcedimento_FK</label>    
-   <input type="text" class="form-control form-control-sm" name="IdProcedimento_FK" value="<%= dados.IdProcedimento_FK %>" readonly="readonly" >    
- </div>   
- <!-- Atualizar dados da tabela de detalhes-->  
- <div class="card-header">     
- <ul class="nav nav-pills w-100">     
- <li class="nav-pill active">     
- <h4>Editar Tabela de Detalhes</h4>     
- </li>     
- </ul>     
- </div>    
- <div class="form-group">   
- <label>IdResposta</label>    
- <input class="form-control" type="text" name="IdResposta" value="<%= dados.IdResposta %>" readonly="readonly"/>   
- <div class="form-group">   
- <label>Letra</label>    
- <input class="form-control" type="text" name="Letra" value="<%= dados.Letra %>" readonly="readonly"/>   
- <div class="form-group">   
- <label>DescricaoResposta</label>    
- <input class="form-control" type="text" name="DescricaoResposta" value="<%= dados.DescricaoResposta %>" readonly="readonly"/>   
- <div class="form-group">   
- <label>IdQuestao_FK</label>    
- <input class="form-control" type="text" name="IdQuestao_FK" value="<%= dados.IdQuestao_FK %>" readonly="readonly"/>   
- <input type="submit" value="Deleta este detalhe" class="btn btn-sm btn-dark" />  
- <a href="/" class="btn btn-outline-primary btn-sm">Voltar</a>     
- </div>  
- </form>  
-   
- <div class="form-group">   
- <a class="btn btn-danger btn-sm" onclick="return confirm( 'Tem certeza de APAGAR o registro Mestre e TODOS seus Detalhes relacionados?' ); "  
- href="/deletaTodos/<%= dados.IdQuestao %>">Deletar mestre e detalhes</a>    
- </div>  
- <footer>  
-  <p>&copy; 2020 </p>  
- </footer>  
- </div>  
- </body>     
- </html>  
+<h4>Deletar este Telefone (Detalhe)?</h4> 
+
+<form action="/delete/<%= dados.IdTelefone %>" method="post"> 
+    <div class="form-horizontal"> 
+    </div>   
+    
+    <div class="form-group">     
+      <label>Nome</label>    
+      <input type="text" class="form-control form-control-sm" value="<%= dados.Nome %>" readonly>    
+    </div>   
+    <div class="form-group">     
+      <label>CPF</label>    
+      <input type="text" class="form-control form-control-sm" value="<%= dados.CPF %>" readonly>    
+    </div>   
+
+    <div class="card-header">     
+        <ul class="nav nav-pills w-100">     
+            <li class="nav-pill active">     
+                <h4>Telefone a ser deletado</h4>     
+            </li>     
+        </ul>     
+    </div>    
+    <div class="form-group">   
+        <label>IdTelefone</label>    
+        <input class="form-control" type="text" name="IdTelefone" value="<%= dados.IdTelefone %>" readonly/>   
+    </div>
+    <div class="form-group">   
+        <label>Numero</label>    
+        <input class="form-control" type="text" name="Numero" value="<%= dados.Numero %>" readonly/>   
+    </div>
+    <div class="form-group">   
+        <label>Unidade da Saude</label>    
+        <input class="form-control" type="text" name="UnidadedaSaude" value="<%= dados.UnidadedaSaude %>" readonly/>   
+    </div>
+
+    <div class="form-group">   
+        <input type="submit" value="Deletar este Telefone" class="btn btn-sm btn-dark" />  
+        <a href="/pessoas" class="btn btn-outline-primary btn-sm">Voltar</a>     
+    </div>  
+</form> 
+  
+<div class="form-group" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">   
+    <a class="btn btn-danger btn-sm" 
+       onclick="return confirm('Tem certeza de APAGAR a Pessoa e TODOS os seus Telefones relacionados?');"  
+       href="/deletaTodos/<%= dados.IdPessoa %>">
+       Deletar Pessoa e todos os detalhes
+    </a>    
+</div> 
+ 
+<footer>  
+    <p>&copy; 2025 </p>  
+</footer>  
+</div>  
+</body>     
+</html>
