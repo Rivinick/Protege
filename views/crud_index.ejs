@@ -1,47 +1,85 @@
 <%- include("./head.ejs"); %>
-    <body> 
-        <div class="table-responsive-sm"> 
-            <table class="table table-striped table-sm"> 
-                <thead> 
-                    <tr> 
-                        <th> CPF </th> 
-                        <th> Nome </th> 
-                        <th> Cargo </th> 
-                        <th> Empresa </th> 
-                        <th> Email </th> 
-                        <th> Senha </th> 
-                        <th> Numero </th> 
-                        <th> Unidade da Saude </th> 
-                        <th class="d-print-none"> 
-                            <a class="btn btn-sm btn-success" href="/inserirPessoa">Cadastra novo registro</a> 
-                        </th> 
-                    </tr> 
-                </thead> 
-                <tbody> 
-                    <% for (const mestre of dados) { %> 
-                    <tr> 
-                        <td> <%= mestre.CPF %> </td> 
-                        <td> <%= mestre.Nome %> </td> 
-                        <td> <%= mestre.Cargo %> </td> 
-                        <td> <%= mestre.Empresa %> </td> 
-                        <td> <%= mestre.Email %> </td> 
-                        <td> <%= mestre.Senha %> </td> 
-                        <td> <%= mestre.Numero %> </td> 
-                        <td> <%= mestre.UnidadedaSaude %> </td> 
-                        <td class="d-print-none"> 
-                            <a class="btn btn-sm btn-info" href="/inserirTelefone/<%= mestre.IdPessoa %>/<%= mestre.IdTelefone %>">Inclui</a> 
-                            <a class="btn btn-sm btn-warning" href="/editar/<%= mestre.IdPessoa %>/<%= mestre.IdTelefone %>">Edita</a> 
-                            <a class="btn btn-sm btn-danger" href="/delete/<%= mestre.IdPessoa %>/<%= mestre.IdTelefone %>">Deleta</a> 
-                        </td> 
-                    </tr> 
-                    <%} %> 
-                </tbody> 
-            </table> 
-        </div> 
-    </div> 
-    </div> 
-    </body> 
-    <footer> 
-        <p>&copy; 2025 </p> 
-    </footer> 
+
+<body>
+    <div class="container">
+        
+        <div class="d-flex justify-content-end mb-3 d-print-none">
+            <a class="btn btn-success btn-lg" href="/inserirPessoa">
+                <i class="fas fa-plus"></i> Cadastrar Nova Pessoa
+            </a>
+        </div>
+
+        <div class="row">
+            <% 
+            let ultimoId = 0;
+            // Loop principal
+            for (let i = 0; i < dados.length; i++) { 
+                const registro = dados[i];
+                
+                // SE FOR UMA NOVA PESSOA (ID diferente do anterior), abrimos um novo cartão
+                if (registro.IdPessoa !== ultimoId) {
+                    // Se não for o primeiro registro de todos, precisamos fechar as tags do cartão anterior
+                    if (ultimoId !== 0) { %>
+                                </tbody>
+                            </table>
+                        </div> </div> </div> <% } 
+                
+                // Atualiza o ID atual
+                ultimoId = registro.IdPessoa;
+                %>
+
+                <div class="col-12 col-md-6 col-lg-6 mb-4"> <div class="card card-pessoa h-100">
+                        <div class="card-header-red">
+                            <h4 class="m-0"><%= registro.Nome %></h4>
+                            <small><%= registro.Cargo %> - <%= registro.Empresa %></small>
+                        </div>
+                        <div class="card-body">
+                            <div class="dados-mestre mb-3">
+                                <p><strong>CPF:</strong> <%= registro.CPF %></p>
+                                <p><strong>Email:</strong> <%= registro.Email %></p>
+                                <div class="text-right">
+                                    <a class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza? Isso apagará a pessoa e todos os telefones.');" href="/deletaTodos/<%= registro.IdPessoa %>">
+                                        Excluir Pessoa Completa
+                                    </a>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <h6 class="text-danger">Contatos Registrados:</h6>
+
+                            <table class="table table-sm table-borderless">
+                                <thead>
+                                    <tr class="text-secondary">
+                                        <th>Número</th>
+                                        <th>Unidade</th>
+                                        <th class="text-right">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            <% } // Fim do IF de Nova Pessoa %>
+
+            <tr>
+                <td><%= registro.Numero %></td>
+                <td><%= registro.UnidadedaSaude %></td>
+                <td class="text-right action-buttons">
+                    <a class="btn btn-sm btn-danger" href="/inserirTelefone/<%= registro.IdPessoa %>/<%= registro.IdTelefone %>" title="Incluir Novo">+</a>
+                    <a class="btn btn-sm btn-danger" href="/editar/<%= registro.IdPessoa %>/<%= registro.IdTelefone %>" title="Editar">✎</a>
+                    <a class="btn btn-sm btn-danger" href="/delete/<%= registro.IdPessoa %>/<%= registro.IdTelefone %>" title="Deletar">X</a>
+                </td>
+            </tr>
+
+            <% } // Fim do Loop For %>
+
+            <% if (dados.length > 0) { %>
+                        </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div> </div>
+</body>
+<footer>
+    <p>&copy; 2025 - Sistema Protege</p>
+</footer>
 </html>

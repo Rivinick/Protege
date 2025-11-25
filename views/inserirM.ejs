@@ -1,7 +1,7 @@
 <%- include("./head.ejs"); %>
     
 <form action="/inserirPessoa" method="post"> 
-    <h4>Dados da Pessoa (Mestre)</h4>
+    <h4>Dados da Pessoa</h4>
     <div> 
         <label for="CPF">CPF</label> 
         <input type="text" name="CPF" class="form-control" value="<%= dados.CPF %>"> 
@@ -28,7 +28,7 @@
     </div>
     <br> 
     
-    <h4>Primeiro Telefone (Detalhe)</h4> 
+    <h4>Gestão de Telefones e Setores</h4> 
     <div> 
         <label for="Numero">Numero</label> 
         <input class="form-control" type="text" name="Numero" value="<%= dados.Numero %>" /> 

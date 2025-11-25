@@ -101,7 +101,7 @@ app.get('/sintomas/detalhes/:codigo', (req, res) => {
 
 // 1. LISTAR (Read)
 app.get("/pessoas", function (req, res) {
-    const sql = "SELECT * FROM Pessoa, Telefone WHERE Pessoa.IdPessoa = Telefone.IdPessoa_FK ORDER BY Pessoa.Nome asc";
+    const sql = "SELECT * FROM Pessoa, Telefone WHERE Pessoa.IdPessoa = Telefone.IdPessoa_FK ORDER BY Pessoa.IdPessoa DESC, Pessoa.Nome ASC";
     db.all(sql, [], function (err, rows) {
         if (err) return console.error(err.message);
         res.render("crud_index.ejs", { dados: rows, layout: false });
