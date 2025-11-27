@@ -1,5 +1,4 @@
 const { db } = require('../config/database');
-const bcrypt = require('bcrypt');
 
 class User {
     constructor(data) {
