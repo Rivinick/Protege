@@ -1,5 +1,5 @@
-const GrupoCiap = require('../models/GrupoCiap');
-const DetalheCiap = require('../models/DetalheCiap');
+const GrupoCiap = require('./GrupoCiap');
+const DetalheCiap = require('./DetalheCiap');
 
 const getGruposCiap = async (req, res) => {
     try {

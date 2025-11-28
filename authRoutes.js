@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { login, register, logout, checkAuth } = require('../controllers/authController');
+const { login, register, logout, checkAuth } = require('./authController');
 
 router.post('/login', login);
 // Helpful GET for development/browser sanity: redirect to UI login or explain method

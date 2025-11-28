@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const { checkAuth } = require('../controllers/authController');
+const { checkAuth } = require('./authController');
 const {
     getGruposCiap,
     getItensCiap,
@@ -8,7 +8,7 @@ const {
     getDetalhesCiap,
     getSintomasPuros,
     verificarSintomas
-} = require('../controllers/ciapController');
+} = require('./ciapController');
 
 // Note: routes are intentionally public to allow guest access from web UI
 

@@ -1,4 +1,4 @@
-const TelefoneUtil = require('../models/TelefoneUtil');
+const TelefoneUtil = require('./TelefoneUtil');
 
 const getTelefonesUteis = async (req, res) => {
     try {

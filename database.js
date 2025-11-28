@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
-const DB_SOURCE = path.join(__dirname, '../../db/BD_Protege_v9.db');
+const DB_SOURCE = path.join(__dirname, './db/BD_Protege_v9.db');
 
 const initializeDatabase = () => {
     // Ensure the db directory exists
