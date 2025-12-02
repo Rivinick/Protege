@@ -85,3 +85,93 @@ h1, h2, h3, h4 {
 .jumbotron h1, .jumbotron p {
     color: #ffffff !important;
 }
+
+/* --- ESTILO DAS ALTERNATIVAS (QUIZ) --- */
+.quiz-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+/* A bolinha (Radio Button Fake) */
+.quiz-circle {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc; /* Cinza se não for a correta */
+    border-radius: 50%;
+    margin-right: 12px;
+    display: inline-block;
+    position: relative;
+}
+
+/* Quando é a resposta correta */
+.quiz-circle.correct {
+    border-color: #009688; /* Verde-água/Azul do tema */
+    background-color: white;
+}
+
+.quiz-circle.correct::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #009688; /* O "miolo" preenchido */
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Removemos a borda dos botões de ação para ficar mais limpo */
+.btn-action-icon {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 14px;
+    padding: 0 5px;
+    transition: color 0.2s;
+}
+.btn-action-icon:hover {
+    color: #d32f2f; /* Fica vermelho ao passar o mouse */
+}
+
+/* --- QUIZ SPECIFIC STYLES --- */
+
+/* The row container for an option */
+.quiz-option {
+    display: flex;
+    align-items: center;
+    cursor: default;
+}
+
+/* The circle (fake radio button) */
+.quiz-circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc; /* Gray border for wrong answers */
+    border-radius: 50%;
+    margin-right: 15px;
+    display: inline-block;
+    position: relative;
+    background-color: white;
+}
+
+/* The circle when it is the CORRECT answer */
+.quiz-circle.correct {
+    border-color: #009688; /* Green/Teal border */
+}
+
+/* The dot inside the correct circle */
+.quiz-circle.correct::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: #009688; /* Green/Teal fill */
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -1,0 +1,27 @@
+<%- include("./head.ejs"); %>
+<div> 
+    <div class="card-header">      
+        <h4>Adicionar Opção para:</h4> 
+        <input type="text" class="form-control" value="<%= dado.Titulo %>" readonly>    
+    </div>     
+</div>    
+<div class="card-header" style="margin-top: 20px;">  
+    <div class="card-body">   
+        <form action="/novaAlternativa/<%= dado.IdQuestao %>" method="post">  
+            <div class="form-group">
+                <label>Texto da Alternativa</label>
+                <input class="form-control" type="text" name="Texto" required />
+            </div>
+            <div class="form-group">
+                <label>É a correta?</label>
+                <select name="EhCorreta" class="form-control">
+                    <option value="Não">Não</option><option value="Sim">Sim</option>
+                </select>
+            </div>
+            <br>
+            <input class="btn btn-primary" type="submit" value="Adicionar"/>    
+            <a href="/quiz" class="btn btn-outline-primary btn-sm">Voltar</a>      
+        </form>   
+    </div>    
+</div>
+<footer><p>&copy; 2025</p></footer></body></html>

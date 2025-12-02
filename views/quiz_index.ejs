@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Questões</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/crud-style.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: transparent;">
+        <div class="container">
+            <a class="navbar-brand" href="/home" style="color: #d32f2f; font-weight: bold; font-size: 24px;">PROTEGE +</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pessoas" style="color: #d32f2f !important;">Agenda</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/quiz" style="color: #d32f2f !important; font-weight: bold;">Questionário</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                     <li class="nav-item">
+                        <a class="nav-link" href="/logout" style="color: #009688 !important; font-weight: bold;">Logout <i class="fas fa-sign-out-alt"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="jumbotron" style="background-color: #d32f2f; color: white; padding: 2rem; border-radius: 10px; margin-bottom: 30px;">
+            <h1 class="display-4">Banco de Questões</h1>
+            <p class="lead">Gerenciamento de perguntas e alternativas para o teste de conhecimento.</p>
+        </div>
+
+        <div class="d-flex justify-content-end mb-4 d-print-none">
+            <a class="btn btn-success btn-lg" href="/novaQuestao">
+                <i class="fas fa-plus-circle"></i> Criar Nova Pergunta
+            </a>
+        </div>
+
+        <div class="row">
+            <% 
+            let ultimoId = 0;
+            // Main Loop
+            for (let i = 0; i < dados.length; i++) { 
+                const registro = dados[i];
+                
+                // NEW QUESTION CHECK
+                if (registro.IdQuestao !== ultimoId) {
+                    // Close previous card if it's not the first one
+                    if (ultimoId !== 0) { %>
+                                </tbody>
+                            </table>
+                        </div> </div> </div> <% } 
+                
+                ultimoId = registro.IdQuestao;
+                %>
+
+                <div class="col-12 mb-4">
+                    <div class="card card-pessoa h-100" style="border: 1px solid #e0e0e0;">
+                        <div class="d-flex justify-content-between align-items-center p-3" style="background-color: #fce4e4; border-bottom: 2px solid #d32f2f; border-radius: 10px 10px 0 0;">
+                            <div>
+                                <h5 class="m-0" style="color: #d32f2f; font-weight: bold;"><%= registro.Titulo %></h5>
+                                <small class="text-muted">
+                                    <span class="badge badge-light" style="border: 1px solid #ccc;">Categoria: <%= registro.Categoria %></span>
+                                    <span class="badge badge-light" style="border: 1px solid #ccc;">Nível: <%= registro.Dificuldade %></span>
+                                </small>
+                            </div>
+                            <div>
+                                <a class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir esta questão e todas as alternativas?');" href="/deletarQuestao/<%= registro.IdQuestao %>">
+                                    <i class="fas fa-trash-alt"></i> Excluir
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body p-0">
+                            <table class="table table-hover mb-0">
+                                <tbody>
+            <% } // End New Question Check %>
+
+            <tr>
+                <td class="pl-4" style="vertical-align: middle;">
+                    <div class="quiz-option">
+                        <span class="quiz-circle <%= registro.EhCorreta == 'Sim' ? 'correct' : '' %>"></span>
+                        <span style="font-size: 1.1rem; color: #555;"><%= registro.Texto %></span>
+                    </div>
+                </td>
+                
+                <td class="text-right pr-4" style="width: 120px; vertical-align: middle;">
+                    <a href="/novaAlternativa/<%= registro.IdQuestao %>" class="btn btn-sm btn-danger" style="width: 35px;" title="Adicionar outra opção">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <a href="/deletarAlternativa/<%= registro.IdAlternativa %>" class="btn btn-sm btn-danger" style="width: 35px;" title="Remover opção" onclick="return confirm('Remover esta opção?');">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </td>
+            </tr>
+
+            <% } // End Main Loop %>
+
+            <% if (dados.length > 0) { %>
+                        </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="col-12 text-center mt-5">
+                    <h3 class="text-muted">Nenhuma questão cadastrada.</h3>
+                    <p>Clique no botão verde acima para começar.</p>
+                </div>
+            <% } %>
+        </div> </div> <br><br>
+    <footer class="text-center pb-4 text-muted">
+        <p>&copy; 2025 Protege+</p>
+    </footer>
+
+</body>
+</html>

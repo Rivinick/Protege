@@ -1,0 +1,57 @@
+<%- include("./head.ejs"); %>
+<body>
+    <div class="container">
+        
+        <div class="jumbotron" style="background-color: #d32f2f; color: white; border-radius: 0 0 15px 15px;">
+            <h1 class="display-4">Teste de Conhecimento</h1>
+            <p class="lead">Responda as questões abaixo e clique em finalizar para ver sua nota.</p>
+        </div>
+
+        <form action="/finalizar-quiz" method="POST">
+            <div class="row">
+                <% 
+                let ultimoId = 0;
+                for (let i = 0; i < dados.length; i++) { 
+                    const registro = dados[i];
+                    
+                    if (registro.IdQuestao !== ultimoId) {
+                        if (ultimoId !== 0) { %>
+                                    </div> </div>
+                            </div>
+                        <% } 
+                        ultimoId = registro.IdQuestao;
+                        %>
+
+                    <div class="col-12 mb-4">
+                        <div class="card card-pessoa h-100" style="border: 1px solid #ddd;">
+                            <div class="card-header" style="background-color: #fff; border-bottom: 2px solid #d32f2f;">
+                                <h5 class="m-0 text-danger"><%= registro.Titulo %></h5>
+                                <small class="text-muted"><%= registro.Categoria %> | <%= registro.Dificuldade %></small>
+                            </div>
+                            <div class="card-body">
+                <% } %>
+
+                <div class="form-check my-2" style="font-size: 1.1rem;">
+                    <input class="form-check-input" type="radio" 
+                           name="pergunta_<%= registro.IdQuestao %>" 
+                           value="<%= registro.IdAlternativa %>" 
+                           id="opt_<%= registro.IdAlternativa %>" required>
+                    <label class="form-check-label" for="opt_<%= registro.IdAlternativa %>" style="cursor: pointer; margin-left: 10px;">
+                        <%= registro.Texto %>
+                    </label>
+                </div>
+
+                <% } %>
+                
+                <% if (dados.length > 0) { %> </div></div></div> <% } %>
+            </div>
+
+            <div class="text-center mb-5">
+                <button type="submit" class="btn btn-success btn-lg px-5 py-3" style="font-size: 1.5rem; border-radius: 50px;">
+                    Finalizar Prova <i class="fas fa-check-circle"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

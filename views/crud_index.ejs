@@ -1,5 +1,12 @@
 <%- include("./head.ejs"); %>
 
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">Gestão de Contatos</h1>
+        <p class="lead">Diretório de profissionais e telefones de emergência.</p>
+    </div>
+</div>
+
 <body>
     <div class="container">
         
@@ -16,19 +23,19 @@
             for (let i = 0; i < dados.length; i++) { 
                 const registro = dados[i];
                 
-                // SE FOR UMA NOVA PESSOA (ID diferente do anterior), abrimos um novo cartão
+                // SE FOR UMA NOVA PESSOA (ID diferente do anterior)
                 if (registro.IdPessoa !== ultimoId) {
-                    // Se não for o primeiro registro de todos, precisamos fechar as tags do cartão anterior
+                    // Fecha o cartão anterior (se não for o primeiro)
                     if (ultimoId !== 0) { %>
                                 </tbody>
                             </table>
                         </div> </div> </div> <% } 
                 
-                // Atualiza o ID atual
                 ultimoId = registro.IdPessoa;
                 %>
 
-                <div class="col-12 col-md-6 col-lg-6 mb-4"> <div class="card card-pessoa h-100">
+                <div class="col-12 col-md-6 col-lg-6 mb-4">
+                    <div class="card card-pessoa h-100">
                         <div class="card-header-red">
                             <h4 class="m-0"><%= registro.Nome %></h4>
                             <small><%= registro.Cargo %> - <%= registro.Empresa %></small>
