@@ -6,11 +6,11 @@ const path = require('path');
 const sqlite = require("sqlite3").verbose();
 
 // ==================================================================
-// IMPORTAÇÃO DE ROTAS (COMENTADAS TEMPORARIAMENTE)
+// IMPORTAÇÃO DE ROTAS
 // ==================================================================
-// const authRoutes = require('./src/routes/authRoutes');
-// const ciapRoutes = require('./src/routes/ciapRoutes');
-// const emergenciaRoutes = require('./src/routes/emergenciaRoutes');
+const authRoutes = require('./authRoutes');
+const ciapRoutes = require('./ciapRoutes');
+const emergenciaRoutes = require('./emergenciaRoutes');
 
 const app = express();
 const port = process.env.APP_PORT || 3000;
@@ -52,10 +52,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Rotas de API (Comentadas)
-// app.use('/api/auth', authRoutes);
-// app.use('/api/ciap', ciapRoutes);
-// app.use('/api/emergencia', emergenciaRoutes);
+// Rotas de API
+app.use('/api/auth', authRoutes);
+app.use('/api/ciap', ciapRoutes);
+app.use('/api/emergencia', emergenciaRoutes);
 
 // ==================================================================
 // ROTAS ORIGINAIS (LOGIN, HOME, SINTOMAS)
