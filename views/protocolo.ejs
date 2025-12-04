@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= protocolo.cod %> - <%= protocolo.enfermidade %></title>
+
+    <link rel="stylesheet" href="/css/emergencia.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Container geral igual ao exemplo */
+        .protocol-container {
+            padding: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            color: #333;
+        }
+
+        .protocol-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #00000020;
+            margin-top: 20px;
+        }
+
+        .protocol-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #D90D1E;
+            margin-bottom: 10px;
+        }
+
+        .protocol-sub {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .protocol-content {
+            white-space: pre-wrap;
+            line-height: 1.55;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="emergency-container">
+
+        <!-- Cabeçalho padrão -->
+        <%- include('./partials/navbar'); %>
+
+        <div class="protocol-container">
+
+            <div class="protocol-box">
+
+                <div class="protocol-title">
+                    <%= protocolo.cod %> – <%= protocolo.enfermidade %>
+                </div>
+
+                <div class="protocol-sub">
+                    <%= protocolo.categoria %>
+                </div>
+
+                <div class="protocol-content">
+                    <%- protocolo.sintomas_proced %>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

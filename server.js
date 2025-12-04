@@ -11,6 +11,7 @@ const sqlite = require("sqlite3").verbose();
 const authRoutes = require('./authRoutes');
 const ciapRoutes = require('./ciapRoutes');
 const emergenciaRoutes = require('./emergenciaRoutes');
+const sbvRoutes = require('./sbvRoutes');
 
 const app = express();
 const port = process.env.APP_PORT || 3000;
@@ -56,6 +57,9 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/ciap', ciapRoutes);
 app.use('/api/emergencia', emergenciaRoutes);
+
+// Rotas SBV
+app.use('/', sbvRoutes);
 
 // ==================================================================
 // ROTAS ORIGINAIS (LOGIN, HOME, SINTOMAS)

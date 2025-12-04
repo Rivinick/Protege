@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suporte Básico de Vida - Protege+</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/sbv.css">
+    <script src="/js/api.js"></script>
+</head>
+
+<body>
+    <div class="home-container">
+        <%- include('./partials/navbar'); %>
+
+        <h2 class="sbv-title">Suporte Básico de Vida</h2>
+
+        <div class="sbv-container">
+            <div id="sbv-list" class="sbv-list">
+                <div class="sbv-loading">Carregando acidentes...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalhes -->
+    <div id="sbvModal" class="sbv-modal">
+        <div class="sbv-modal-content">
+            <div class="sbv-modal-header">
+                <h3 class="sbv-modal-title" id="modalTitle">Detalhes</h3>
+                <button class="sbv-close" onclick="closeSbvModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Carregar acidentes ao abrir a página
+        document.addEventListener('DOMContentLoaded', loadAcidentes);
+
+        async function loadAcidentes() {
+            try {
+                const response = await fetch('/api/sbv/acidentes');
+                const data = await response.json();
+
+                const container = document.getElementById('sbv-list');
+
+                if (data.success && data.acidentes && data.acidentes.length > 0) {
+                    container.innerHTML = data.acidentes.map(acidente => `
+                        <div class="sbv-item" onclick="openModal('${acidente.cod}', '${acidente.enfermidade}')">
+                            <div class="sbv-item-content">
+                                <div class="sbv-item-cod">${acidente.cod}</div>
+                                <h3 class="sbv-item-title">${acidente.enfermidade}</h3>
+                            </div>
+                            <div class="sbv-item-arrow">›</div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div class="sbv-no-data">Nenhum acidente encontrado.</div>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar acidentes:', error);
+                document.getElementById('sbv-list').innerHTML = 
+                    '<div class="sbv-error">Erro ao carregar acidentes. Tente novamente.</div>';
+            }
+        }
+
+        async function openModal(cod, enfermidade) {
+            try {
+                const response = await fetch(`/api/sbv/acidentes/${cod}`);
+                const data = await response.json();
+
+                if (data.success && data.acidente) {
+                    const acidente = data.acidente;
+                    document.getElementById('modalTitle').textContent = acidente.enfermidade;
+                    
+                    document.getElementById('modalBody').innerHTML = `
+                        <div class="sbv-modal-cod">Código: ${acidente.cod}</div>
+                        <div class="sbv-modal-categoria">${acidente.categoria}</div>
+                        <div class="sbv-modal-body">
+                            ${formatSintomas(acidente.sintomas_proced)}
+                        </div>
+                    `;
+
+                    document.getElementById('sbvModal').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar detalhes:', error);
+                alert('Erro ao carregar detalhes do acidente');
+            }
+        }
+
+        function formatSintomas(texto) {
+            if (!texto) return '<p>Sem informações disponíveis.</p>';
+            
+            // Converte quebras de linha em <br> e parágrafos
+            return texto
+                .split('\n')
+                .filter(linha => linha.trim().length > 0)
+                .map(linha => `<p>${linha.trim()}</p>`)
+                .join('');
+        }
+
+        function closeSbvModal() {
+            document.getElementById('sbvModal').style.display = 'none';
+        }
+
+        // Fechar modal clicando fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('sbvModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
